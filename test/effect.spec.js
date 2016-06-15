@@ -4,14 +4,13 @@ import expect from 'expect'
 import {createStore, createEffect, createReducer} from '../src/index'
 
 describe('effect', function () {
-  let api
+  let spyTargets
   let handlers
   let reducer
   let store
-  let spyTargets
 
   beforeEach(function () {
-    api = () => Promise.resolve({status: 200, data: "It's coming for you. Watch out."})
+    const api = () => Promise.resolve({status: 200, data: "It's coming for you. Watch out."})
 
     spyTargets = {
       getData: () => api('/data').then(({data}) => ({type: 'GET_DATA_SUCCESS', payload: data})),

@@ -13,6 +13,8 @@ The core of Redux is simple. But it comes with a big ecosystem, middleware, acti
 ### How It Works
 Running side-effects in the reducer is bad because it makes your state hard to predict & test. Writing side-effects outside the reducer is also bad - because updating application logic requires making changes in several places. The solution is to *write* side-effects inside the reducer and *run* them outside.
 
+Selectors are great... write something here about selectors
+
 ### Usage
 
 #### API
