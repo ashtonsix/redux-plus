@@ -18,8 +18,8 @@ const ignoreNull = () => next => action => {
 }
 
 const storeEnhancer = compose(
-  enhanceDispatch,
   install(),
+  enhanceDispatch,
   applyMiddleware(ignoreNull),
 )
 

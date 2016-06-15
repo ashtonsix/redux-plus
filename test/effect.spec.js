@@ -40,6 +40,12 @@ describe('effect', function () {
         () => ({type: 'ACTION_2'}),
         () => Promise.resolve({type: 'ACTION_3'})
       ),
+      BATCH_EFFECTS_STR: state => createEffect(
+        state,
+        'ACTION_1',
+        () => ('ACTION_2'),
+        () => Promise.resolve('ACTION_3')
+      ),
       ACTION_1: state => state,
       ACTION_2: state => state,
       ACTION_3: state => state,
@@ -100,6 +106,17 @@ describe('effect', function () {
   it('should dispatch multiple actions if multiple effects are returned', function (done) {
     const actionSpies = ['ACTION_1', 'ACTION_2', 'ACTION_3'].map(key => expect.spyOn(handlers, key))
     store.dispatch('BATCH_EFFECTS')
+    const reducerSpy = expect.spyOn(spyTargets, 'reducer')
+    setTimeout(() => {
+      expect(reducerSpy).toHaveBeenCalled()
+      actionSpies.forEach(spy => expect(spy).toHaveBeenCalled())
+      done()
+    })
+  })
+
+  it('should dispatch strings from effects as actions', function (done) {
+    const actionSpies = ['ACTION_1', 'ACTION_2', 'ACTION_3'].map(key => expect.spyOn(handlers, key))
+    store.dispatch('BATCH_EFFECTS_STR')
     const reducerSpy = expect.spyOn(spyTargets, 'reducer')
     setTimeout(() => {
       expect(reducerSpy).toHaveBeenCalled()
