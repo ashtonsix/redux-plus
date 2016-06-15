@@ -9,6 +9,7 @@ var _redux = require('redux');
 
 var _reduxLoop = require('redux-loop');
 
+// implementing as storeEnhancer is necessary for second argument
 var enhanceDispatch = function enhanceDispatch(next) {
   return function (reducer, state) {
     var store = next(reducer, state);
@@ -33,7 +34,18 @@ var ignoreNull = function ignoreNull() {
   };
 };
 
-var storeEnhancer = (0, _redux.compose)(enhanceDispatch, (0, _reduxLoop.install)(), (0, _redux.applyMiddleware)(ignoreNull));
+// fix type strings from redux-loop
+var stringToType = function stringToType() {
+  return function (next) {
+    return function (action) {
+      if (typeof action === 'string') action = { type: action, payload: null };
+      next(action);
+      return action;
+    };
+  };
+};
+
+var storeEnhancer = (0, _redux.compose)(enhanceDispatch, (0, _reduxLoop.install)(), (0, _redux.applyMiddleware)(ignoreNull, stringToType));
 
 // flag for createStore
 storeEnhancer.__REDUX_PLUS$isStoreEnhancer = true;

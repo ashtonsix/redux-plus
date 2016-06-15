@@ -6,6 +6,7 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "babel src -d dist",
+    "postbuild": "git add . --all",
     "test": "mocha",
     "start": "mocha --watch --reporter min"
   },

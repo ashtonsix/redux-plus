@@ -4,12 +4,12 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _redux = require('redux');
+var _storeEnhancer = require('./storeEnhancer');
 
-Object.defineProperty(exports, 'applyMiddleware', {
+Object.defineProperty(exports, 'plus', {
   enumerable: true,
   get: function get() {
-    return _redux.applyMiddleware;
+    return _storeEnhancer.storeEnhancer;
   }
 });
 
@@ -40,6 +40,15 @@ Object.defineProperty(exports, 'createEffect', {
   }
 });
 
+var _combineReducers = require('./combineReducers');
+
+Object.defineProperty(exports, 'combineReducers', {
+  enumerable: true,
+  get: function get() {
+    return _combineReducers.combineReducers;
+  }
+});
+
 var _compose = require('./compose');
 
 Object.defineProperty(exports, 'compose', {
@@ -49,11 +58,11 @@ Object.defineProperty(exports, 'compose', {
   }
 });
 
-var _storeEnhancer = require('./storeEnhancer');
+var _redux = require('redux');
 
-Object.defineProperty(exports, 'plus', {
+Object.defineProperty(exports, 'applyMiddleware', {
   enumerable: true,
   get: function get() {
-    return _storeEnhancer.storeEnhancer;
+    return _redux.applyMiddleware;
   }
 });
