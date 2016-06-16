@@ -40,6 +40,15 @@ Object.defineProperty(exports, 'createEffect', {
   }
 });
 
+var _createSelector = require('./createSelector');
+
+Object.defineProperty(exports, 'createSelector', {
+  enumerable: true,
+  get: function get() {
+    return _createSelector.createSelector;
+  }
+});
+
 var _combineReducers = require('./combineReducers');
 
 Object.defineProperty(exports, 'combineReducers', {
