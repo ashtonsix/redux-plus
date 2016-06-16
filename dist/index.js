@@ -22,7 +22,7 @@ Object.defineProperty(exports, 'createStore', {
   }
 });
 
-var _createReducer = require('./createReducer');
+var _createReducer = require('./creators/createReducer');
 
 Object.defineProperty(exports, 'createReducer', {
   enumerable: true,
@@ -31,7 +31,7 @@ Object.defineProperty(exports, 'createReducer', {
   }
 });
 
-var _createEffect = require('./createEffect');
+var _createEffect = require('./creators/createEffect');
 
 Object.defineProperty(exports, 'createEffect', {
   enumerable: true,
@@ -40,7 +40,7 @@ Object.defineProperty(exports, 'createEffect', {
   }
 });
 
-var _createSelector = require('./createSelector');
+var _createSelector = require('./creators/createSelector');
 
 Object.defineProperty(exports, 'createSelector', {
   enumerable: true,

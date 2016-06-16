@@ -1,7 +1,7 @@
 /* eslint func-names:0, prefer-arrow-callback:0 */
 
 import expect from 'expect'
-import {createReducer} from '../src/index'
+import {createReducer} from '../../src/index'
 
 describe('createReducer', function () {
   let handlers

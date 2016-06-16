@@ -1,7 +1,7 @@
 /* eslint func-names:0, prefer-arrow-callback:0 */
 
 import expect from 'expect'
-import {createStore, createSelector, createReducer, combineReducers} from '../src/index'
+import {createStore, createSelector, createReducer, combineReducers} from '../../src/index'
 
 describe('combineReducers', function () {
   describe('simpleStore', function () {
