@@ -58,20 +58,17 @@ Object.defineProperty(exports, 'combineReducers', {
   }
 });
 
-var _compose = require('./compose');
-
-Object.defineProperty(exports, 'compose', {
-  enumerable: true,
-  get: function get() {
-    return _compose.compose;
-  }
-});
-
 var _redux = require('redux');
 
 Object.defineProperty(exports, 'applyMiddleware', {
   enumerable: true,
   get: function get() {
     return _redux.applyMiddleware;
+  }
+});
+Object.defineProperty(exports, 'compose', {
+  enumerable: true,
+  get: function get() {
+    return _redux.compose;
   }
 });

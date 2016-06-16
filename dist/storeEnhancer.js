@@ -32,7 +32,4 @@ var storeEnhancer = (0, _redux.compose)(_enhancers.dispatchEnhancer, _enhancers.
 // monkey-patch for redux-loop behaviour (effectEnhancer)
 (0, _redux.applyMiddleware)(ignoreNull, stringToType));
 
-// flag for createStore
-storeEnhancer.__REDUX_PLUS$isStoreEnhancer = true;
-
 exports.storeEnhancer = storeEnhancer;

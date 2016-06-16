@@ -20,7 +20,4 @@ const storeEnhancer = compose(
   applyMiddleware(ignoreNull, stringToType)
 )
 
-// flag for createStore
-storeEnhancer.__REDUX_PLUS$isStoreEnhancer = true
-
 export {storeEnhancer}
