@@ -2,21 +2,17 @@ redux-plus
 ==========
 > **WORK IN PROGRESS - DO NOT USE**
 
-The core of Redux is simple. But it comes with a big ecosystem, middleware, action creators and other things attached that slow down development. `redux-plus` solves this by bundling the best tools & exporting a preset store-creator optimized for productivity.
+The core of Redux is simple. But it comes with a big ecosystem, middleware, action creators, selectors and other things attached that slow down development - a single change in specs shouldn't require changes in 5+ locations to implement. redux-plus makes developers more productive by finding one place for all state-related code: the reducer.
 
-### Why
-* More productive API
-* Easy-to-test side-effects
-* All state-related code in one place (the reducer)
-* Sound theoretical foundation
+redux-plus makes three non-breaking changes to redux:
 
-### How It Works
-Running side-effects in the reducer is bad because it makes your state hard to predict & test. Writing side-effects outside the reducer is also bad - because updating application logic requires making changes in several places. The solution is to *write* side-effects inside the reducer and *run* them outside.
+**dispatchEnhancer**: When using redux-plus you should dispatch actions directly to the store using `store.dispatch`. The API is nicer now: `store.dispatch('INCREMENT', 5)` & `store.dispatch({type: 'INCREMENT', payload: 5})` are equivalent.
 
-Selectors are great... write something here about selectors
+**effectEnhancer**: Running side-effects inside the reducer is bad because it makes your state hard to predict & test. With redux-plus you can return effects from the reducer which run in a different context. Effects can optionally return actions that are dispatched to the store.
+
+**selectorEnhancer**: Selectors are like formulas in a spreadsheet. They compute derived data and only update when the data they depend on does. Selectors can reference other selectors and their formulas can contain reducers, effects & other selectors.
 
 ### Usage
-
 ```js
 import {
   createStore, combineReducers, createReducer,
