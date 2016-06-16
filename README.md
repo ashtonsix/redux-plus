@@ -17,6 +17,38 @@ Selectors are great... write something here about selectors
 
 ### Usage
 
+```js
+import {
+  createStore, combineReducers, createReducer,
+  createEffect, createSelector} from 'redux-plus'
+
+const reducer = combineReducers({
+  counter: createReducer({
+    INCREMENT: state => state + 1
+    INCREMENT_IN_5_SECONDS: state => createEffect(
+      state,
+      () => new Promise(resolve => setTimeout(() =>
+        resolve('INCREMENT'),
+        5000))
+    )
+  }, 0),
+  counterDoubled: createSelector(
+    'counter',
+    (state, counter) => counter * 2),
+})
+
+const store = createStore(reducer)
+
+store.getState() // {counter: 0, counterDoubled: 0}
+store.dispatch('INCREMENT')
+store.getState() // {counter: 1, counterDoubled: 2}
+store.dispatch('INCREMENT_IN_5_SECONDS')
+store.getState() // {counter: 1, counterDoubled: 2}
+setTimeout(() =>
+  store.getState(), // {counter: 2, counterDoubled: 4}
+  5000)
+```
+
 #### API
 
 createReducer / combineReducer: catch-all middleware as plain function
