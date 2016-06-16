@@ -14,10 +14,10 @@ const stringToType = () => next => action => {
 
 const storeEnhancer = compose(
   dispatchEnhancer,
+  selectorEnhancer,
   effectEnhancer,
   // monkey-patch for redux-loop behaviour (effectEnhancer)
-  applyMiddleware(ignoreNull, stringToType),
-  selectorEnhancer
+  applyMiddleware(ignoreNull, stringToType)
 )
 
 // flag for createStore

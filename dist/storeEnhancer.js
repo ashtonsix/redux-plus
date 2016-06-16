@@ -28,9 +28,9 @@ var stringToType = function stringToType() {
   };
 };
 
-var storeEnhancer = (0, _redux.compose)(_enhancers.dispatchEnhancer, _enhancers.effectEnhancer,
+var storeEnhancer = (0, _redux.compose)(_enhancers.dispatchEnhancer, _enhancers.selectorEnhancer, _enhancers.effectEnhancer,
 // monkey-patch for redux-loop behaviour (effectEnhancer)
-(0, _redux.applyMiddleware)(ignoreNull, stringToType), _enhancers.selectorEnhancer);
+(0, _redux.applyMiddleware)(ignoreNull, stringToType));
 
 // flag for createStore
 storeEnhancer.__REDUX_PLUS$isStoreEnhancer = true;

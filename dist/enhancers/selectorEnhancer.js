@@ -11,6 +11,8 @@ var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
+var _reduxLoop = require('redux-loop');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
@@ -30,6 +32,8 @@ var topologicalSort = function topologicalSort(nodes) {
       currentNode.__status = 'active';
       sortedNodes = currentNode.dependsOn.map(function (key) {
         return nodeMap[key];
+      }).filter(function (n) {
+        return n;
       }).reduce(visit, sortedNodes);
       currentNode.__status = 'complete';
       return [currentNode].concat(sortedNodes);
@@ -39,7 +43,7 @@ var topologicalSort = function topologicalSort(nodes) {
 
   return nodes.map(function (node) {
     return _extends({}, node, { __status: 'inactive' });
-  }).reduce(visit).map(function (_ref) {
+  }).reduce(visit, []).map(function (_ref) {
     var __status = _ref.__status;
 
     var node = _objectWithoutProperties(_ref, ['__status']);
@@ -49,8 +53,8 @@ var topologicalSort = function topologicalSort(nodes) {
 };
 
 var enhanceReducer = exports.enhanceReducer = function enhanceReducer(reducer) {
-  var selectors = reducer.__REDUX_PLUS$selectorStats || [];
-  if (!reducer.__REDUX_PLUS$isSelector) return reducer;
+  var selectors = reducer.__REDUX_PLUS$selectorStats;
+  if (!reducer.__REDUX_PLUS$selectorStats) return reducer;
   // normalize paths
   selectors = selectors.map(function (selector) {
     return _extends({}, selector, {
@@ -75,7 +79,7 @@ var enhanceReducer = exports.enhanceReducer = function enhanceReducer(reducer) {
     return selectors.reduce(function (newState, _ref2) {
       var path = _ref2.path;
       var selector = _ref2.selector;
-      return _lodash2.default.set(newState, path, selector(newState, path));
+      return _lodash2.default.set((0, _reduxLoop.getModel)(newState), path, selector((0, _reduxLoop.getModel)(newState), path));
     }, reducer(state, action));
   });
 };

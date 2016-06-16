@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import {getModel} from 'redux-loop'
 
 const AcyclicError = message => ({message})
 const topologicalSort = nodes => {
@@ -9,7 +10,7 @@ const topologicalSort = nodes => {
     }
     if (currentNode.__status === 'inactive') {
       currentNode.__status = 'active'
-      sortedNodes = currentNode.dependsOn.map(key => nodeMap[key]).reduce(visit, sortedNodes)
+      sortedNodes = currentNode.dependsOn.map(key => nodeMap[key]).filter(n => n).reduce(visit, sortedNodes)
       currentNode.__status = 'complete'
       return [currentNode].concat(sortedNodes)
     }
@@ -18,13 +19,13 @@ const topologicalSort = nodes => {
 
   return nodes
     .map(node => ({...node, __status: 'inactive'}))
-    .reduce(visit)
+    .reduce(visit, [])
     .map(({__status, ...node}) => node) // eslint-disable-line no-unused-vars
 }
 
 export const enhanceReducer = reducer => {
-  let selectors = reducer.__REDUX_PLUS$selectorStats || []
-  if (!reducer.__REDUX_PLUS$isSelector) return reducer
+  let selectors = reducer.__REDUX_PLUS$selectorStats
+  if (!reducer.__REDUX_PLUS$selectorStats) return reducer
   // normalize paths
   selectors = selectors.map(selector => ({
     ...selector,
@@ -48,7 +49,7 @@ export const enhanceReducer = reducer => {
   return enhanceReducer((state, action) =>
     selectors.reduce(
       (newState, {path, selector}) =>
-        _.set(newState, path, selector(newState, path)),
+        _.set(getModel(newState), path, selector(getModel(newState), path)),
       reducer(state, action)
     ))
 }
