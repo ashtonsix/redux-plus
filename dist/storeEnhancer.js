@@ -9,6 +9,4 @@ var _redux = require('redux');
 
 var _enhancers = require('./enhancers');
 
-var storeEnhancer = (0, _redux.compose)(_enhancers.dispatchEnhancer, _enhancers.selectorEnhancer, _enhancers.effectEnhancer);
-
-exports.storeEnhancer = storeEnhancer;
+var storeEnhancer = exports.storeEnhancer = (0, _redux.compose)(_enhancers.dispatchEnhancer, _enhancers.selectorEnhancer, _enhancers.effectEnhancer);

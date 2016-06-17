@@ -45,8 +45,7 @@ var createSelector = exports.createSelector = function createSelector() {
   var selector = function selector(state) {
     return state;
   };
-  selector.__REDUX_PLUS$isSelector = true;
-  selector.__REDUX_PLUS$selectorStats = [{
+  selector.selectors = [{
     path: [], dependsOn: dependencies,
     selector: function selector(globalState, selectorPath) {
       var localState = _lodash2.default.get(globalState, selectorPath);

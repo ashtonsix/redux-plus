@@ -2,10 +2,10 @@ import _ from 'lodash'
 import {combineReducers as _combineReducers} from 'redux-loop'
 
 export const combineReducers = (reducerMap, ...args) => {
-  const selectorStats = _.toPairs(reducerMap)
-    .filter(([, reducer]) => reducer.__REDUX_PLUS$isSelector)
+  const selectors = _.toPairs(reducerMap)
+    .filter(([, reducer]) => reducer.selectors)
     .map(([key, reducer]) =>
-      reducer.__REDUX_PLUS$selectorStats.map(stat => ({
+      reducer.selectors.map(stat => ({
         ...stat,
         path: [key, ...stat.path],
       })))
@@ -13,8 +13,8 @@ export const combineReducers = (reducerMap, ...args) => {
 
   const finalReducer = _combineReducers(reducerMap, ...args)
 
-  if (selectorStats.length) {
-    finalReducer.__REDUX_PLUS$selectorStats = selectorStats
+  if (selectors.length) {
+    finalReducer.selectors = selectors
   }
 
   return finalReducer

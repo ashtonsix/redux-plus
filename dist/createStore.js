@@ -15,7 +15,5 @@ var createStore = exports.createStore = function createStore(reducer, initialSta
     initialState = undefined;
   }
 
-  storeEnhancer = storeEnhancer || _storeEnhancer2.storeEnhancer;
-
-  return (0, _redux.createStore)(reducer, initialState, storeEnhancer);
+  return (0, _redux.createStore)(reducer, initialState, storeEnhancer || _storeEnhancer2.storeEnhancer);
 };

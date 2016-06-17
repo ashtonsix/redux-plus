@@ -20,8 +20,7 @@ export const createSelector = (...args) => {
   const reducer = defaultMemoize(args[args.length - 1])
 
   const selector = state => state
-  selector.__REDUX_PLUS$isSelector = true
-  selector.__REDUX_PLUS$selectorStats = [{
+  selector.selectors = [{
     path: [], dependsOn: dependencies,
     selector: (globalState, selectorPath) => {
       const localState = _.get(globalState, selectorPath)

@@ -53,16 +53,14 @@ var topologicalSort = function topologicalSort(nodes) {
 };
 
 var enhanceReducer = exports.enhanceReducer = function enhanceReducer(reducer) {
-  var selectors = reducer.__REDUX_PLUS$selectorStats;
-  if (!reducer.__REDUX_PLUS$selectorStats) return reducer;
-  // normalize paths
-  selectors = selectors.map(function (selector) {
+  if (!reducer.selectors) return reducer;
+  var selectors = reducer.selectors.map(function (selector) {
     return _extends({}, selector, {
       path: _lodash2.default.toPath(selector.path).join('.'),
-      dependsOn: selector.dependsOn.map(function (_dependency) {
-        var dependency = typeof _dependency === 'function' ? _dependency() : _dependency; // TODO: add local/global state arguments
+      dependsOn: selector.dependsOn.map(function (dependency) {
+        dependency = typeof dependency === 'function' ? dependency() : dependency; // TODO: add local/global state arguments
         if (typeof dependency !== 'string') {
-          console.error('Dependency must be a string or return a string (' + selector.path + ')', _dependency);
+          console.error('Dependency must be a string or return a string (' + selector.path + ')');
         }
         return _lodash2.default.toPath(dependency).join('.');
       })
@@ -84,14 +82,12 @@ var enhanceReducer = exports.enhanceReducer = function enhanceReducer(reducer) {
   });
 };
 
-var selectorEnhancer = exports.selectorEnhancer = function selectorEnhancer(next) {
+var selectorEnhancer = exports.selectorEnhancer = function selectorEnhancer(createStore) {
   return function (reducer) {
     for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
       args[_key - 1] = arguments[_key];
     }
 
-    reducer = enhanceReducer(reducer);
-
-    return next.apply(undefined, [reducer].concat(args));
+    return createStore.apply(undefined, [enhanceReducer(reducer)].concat(args));
   };
 };

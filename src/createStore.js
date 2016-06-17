@@ -7,7 +7,5 @@ export const createStore = (reducer, initialState, storeEnhancer) => {
     initialState = undefined
   }
 
-  storeEnhancer = storeEnhancer || _storeEnhancer
-
-  return _createStore(reducer, initialState, storeEnhancer)
+  return _createStore(reducer, initialState, storeEnhancer || _storeEnhancer)
 }

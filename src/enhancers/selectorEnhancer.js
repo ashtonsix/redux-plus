@@ -24,16 +24,14 @@ const topologicalSort = nodes => {
 }
 
 export const enhanceReducer = reducer => {
-  let selectors = reducer.__REDUX_PLUS$selectorStats
-  if (!reducer.__REDUX_PLUS$selectorStats) return reducer
-  // normalize paths
-  selectors = selectors.map(selector => ({
+  if (!reducer.selectors) return reducer
+  let selectors = reducer.selectors.map(selector => ({
     ...selector,
     path: _.toPath(selector.path).join('.'),
-    dependsOn: selector.dependsOn.map(_dependency => {
-      const dependency = typeof _dependency === 'function' ? _dependency() : _dependency // TODO: add local/global state arguments
+    dependsOn: selector.dependsOn.map(dependency => {
+      dependency = typeof dependency === 'function' ? dependency() : dependency // TODO: add local/global state arguments
       if (typeof dependency !== 'string') {
-        console.error(`Dependency must be a string or return a string (${selector.path})`, _dependency)
+        console.error(`Dependency must be a string or return a string (${selector.path})`)
       }
       return _.toPath(dependency).join('.')
     }),
@@ -54,8 +52,5 @@ export const enhanceReducer = reducer => {
     ))
 }
 
-export const selectorEnhancer = next => (reducer, ...args) => {
-  reducer = enhanceReducer(reducer)
-
-  return next(reducer, ...args)
-}
+export const selectorEnhancer = createStore => (reducer, ...args) =>
+  createStore(enhanceReducer(reducer), ...args)

@@ -10,7 +10,7 @@ redux-plus makes three non-breaking changes to redux:
 
 **effectEnhancer**: Running side-effects inside the reducer is bad because it makes your state hard to predict & test. With redux-plus you can return effects from the reducer which run in a different context. Effects can optionally return actions that are dispatched to the store.
 
-**selectorEnhancer**: Selectors are like formulas in a spreadsheet. They compute derived data and only update when the data they depend on does. Selectors can reference other selectors and their formulas can contain reducers, effects & other selectors.
+**selectorEnhancer**: Selectors are like formulas in a spreadsheet. They compute derived data and only update when the data they depend on does. Selectors can reference other selectors and their formulas (functions) can contain reducers, effects & other selectors.
 
 ### Usage
 ```js

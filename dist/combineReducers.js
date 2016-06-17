@@ -24,17 +24,17 @@ var combineReducers = exports.combineReducers = function combineReducers(reducer
     args[_key - 1] = arguments[_key];
   }
 
-  var selectorStats = _lodash2.default.toPairs(reducerMap).filter(function (_ref) {
+  var selectors = _lodash2.default.toPairs(reducerMap).filter(function (_ref) {
     var _ref2 = _slicedToArray(_ref, 2);
 
     var reducer = _ref2[1];
-    return reducer.__REDUX_PLUS$isSelector;
+    return reducer.selectors;
   }).map(function (_ref3) {
     var _ref4 = _slicedToArray(_ref3, 2);
 
     var key = _ref4[0];
     var reducer = _ref4[1];
-    return reducer.__REDUX_PLUS$selectorStats.map(function (stat) {
+    return reducer.selectors.map(function (stat) {
       return _extends({}, stat, {
         path: [key].concat(_toConsumableArray(stat.path))
       });
@@ -45,8 +45,8 @@ var combineReducers = exports.combineReducers = function combineReducers(reducer
 
   var finalReducer = _reduxLoop.combineReducers.apply(undefined, [reducerMap].concat(args));
 
-  if (selectorStats.length) {
-    finalReducer.__REDUX_PLUS$selectorStats = selectorStats;
+  if (selectors.length) {
+    finalReducer.selectors = selectors;
   }
 
   return finalReducer;
