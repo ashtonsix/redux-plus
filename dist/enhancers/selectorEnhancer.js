@@ -36,7 +36,7 @@ var topologicalSort = function topologicalSort(nodes) {
         return n;
       }).reduce(visit, sortedNodes);
       currentNode.__status = 'complete';
-      return [currentNode].concat(sortedNodes);
+      return sortedNodes.concat(currentNode);
     }
     return sortedNodes;
   };
@@ -53,33 +53,31 @@ var topologicalSort = function topologicalSort(nodes) {
 };
 
 var enhanceReducer = exports.enhanceReducer = function enhanceReducer(reducer) {
+  var depth = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
+
   if (!reducer.selectors) return reducer;
-  var selectors = reducer.selectors.map(function (selector) {
+
+  var selectors = topologicalSort(reducer.selectors.map(function (selector) {
     return _extends({}, selector, {
       path: _lodash2.default.toPath(selector.path).join('.'),
       dependsOn: selector.dependsOn.map(function (dependency) {
-        dependency = typeof dependency === 'function' ? dependency() : dependency; // TODO: add local/global state arguments
-        if (typeof dependency !== 'string') {
-          console.error('Dependency must be a string or return a string (' + selector.path + ')');
-        }
         return _lodash2.default.toPath(dependency).join('.');
       })
     });
-  });
+  }));
 
-  try {
-    selectors = topologicalSort(selectors);
-  } catch (e) {
-    if (e instanceof AcyclicError) console.error(e.message);else throw e;
-  }
+  return function (state, action) {
+    return(
+      // console.log(2, state, action, reducer(state, action)) ||
+      selectors.reduce(function (newState, _ref2) {
+        var path = _ref2.path;
+        var selector = _ref2.selector;
 
-  return enhanceReducer(function (state, action) {
-    return selectors.reduce(function (newState, _ref2) {
-      var path = _ref2.path;
-      var selector = _ref2.selector;
-      return _lodash2.default.set((0, _reduxLoop.getModel)(newState), path, selector((0, _reduxLoop.getModel)(newState), path));
-    }, reducer(state, action));
-  });
+        var result = enhanceReducer(selector, depth + 1)((0, _reduxLoop.getModel)(newState), path);
+        return selector.selectors ? result : _lodash2.default.set((0, _reduxLoop.getModel)(newState), path, result);
+      }, depth ? state : reducer(state, action))
+    );
+  };
 };
 
 var selectorEnhancer = exports.selectorEnhancer = function selectorEnhancer(createStore) {

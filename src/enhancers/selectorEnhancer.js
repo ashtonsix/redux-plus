@@ -12,7 +12,7 @@ const topologicalSort = nodes => {
       currentNode.__status = 'active'
       sortedNodes = currentNode.dependsOn.map(key => nodeMap[key]).filter(n => n).reduce(visit, sortedNodes)
       currentNode.__status = 'complete'
-      return [currentNode].concat(sortedNodes)
+      return sortedNodes.concat(currentNode)
     }
     return sortedNodes
   }
@@ -23,33 +23,27 @@ const topologicalSort = nodes => {
     .map(({__status, ...node}) => node) // eslint-disable-line no-unused-vars
 }
 
-export const enhanceReducer = reducer => {
+export const enhanceReducer = (reducer, depth = 0) => {
   if (!reducer.selectors) return reducer
-  let selectors = reducer.selectors.map(selector => ({
-    ...selector,
-    path: _.toPath(selector.path).join('.'),
-    dependsOn: selector.dependsOn.map(dependency => {
-      dependency = typeof dependency === 'function' ? dependency() : dependency // TODO: add local/global state arguments
-      if (typeof dependency !== 'string') {
-        console.error(`Dependency must be a string or return a string (${selector.path})`)
-      }
-      return _.toPath(dependency).join('.')
-    }),
-  }))
 
-  try {
-    selectors = topologicalSort(selectors)
-  } catch (e) {
-    if (e instanceof AcyclicError) console.error(e.message)
-    else throw e
-  }
+  const selectors = topologicalSort(
+    reducer.selectors.map(selector => ({
+      ...selector,
+      path: _.toPath(selector.path).join('.'),
+      dependsOn: selector.dependsOn.map(dependency =>
+        _.toPath(dependency).join('.')),
+    }))
+  )
 
-  return enhanceReducer((state, action) =>
+  return (state, action) =>
+    // console.log(2, state, action, reducer(state, action)) ||
     selectors.reduce(
-      (newState, {path, selector}) =>
-        _.set(getModel(newState), path, selector(getModel(newState), path)),
-      reducer(state, action)
-    ))
+      (newState, {path, selector}) => {
+        const result = enhanceReducer(selector, depth + 1)(getModel(newState), path)
+        return selector.selectors ? result : _.set(getModel(newState), path, result)
+      },
+      depth ? state : reducer(state, action)
+    )
 }
 
 export const selectorEnhancer = createStore => (reducer, ...args) =>

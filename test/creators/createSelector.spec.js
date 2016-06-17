@@ -41,7 +41,7 @@ describe('combineReducers', function () {
     })
   })
 
-  describe.skip('complexStore', function () {
+  describe('chainedAndNestedStore', function () {
     let counterHandlers
     let reducer
     let store
@@ -55,9 +55,15 @@ describe('combineReducers', function () {
       reducer = combineReducers({
         counter: createReducer(counterHandlers, 0),
         counterDoubled: createSelector(
+          'counter',
+          (state, counter) => counter * 2),
+        counterTripled: createSelector(
           createSelector(
-            'counter',
-            (state, counter) => counter * 2)),
+          'counterDoubled',
+          (state, counter) => counter * 1.5)),
+        counterHalved: createSelector(
+          'counterTripled',
+          (state, counter) => counter / 6),
       })
 
       store = createStore(reducer)
@@ -65,16 +71,18 @@ describe('combineReducers', function () {
 
     it('should compute state on initialization', function () {
       expect(store.getState()).toEqual({
-        counter: 0,
-        counterDoubled: 0,
+        counter: 0, counterDoubled: 0, counterTripled: 0, counterHalved: 0,
       })
     })
 
     it('should update computed state when actions run', function () {
       store.dispatch('INCREMENT')
       expect(store.getState()).toEqual({
-        counter: 1,
-        counterDoubled: 2,
+        counter: 1, counterDoubled: 2, counterTripled: 3, counterHalved: 0.5,
+      })
+      store.dispatch('INCREMENT')
+      expect(store.getState()).toEqual({
+        counter: 2, counterDoubled: 4, counterTripled: 6, counterHalved: 1,
       })
     })
   })

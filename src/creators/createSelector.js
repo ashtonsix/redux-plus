@@ -17,19 +17,21 @@ export const defaultMemoize = func => {
 
 export const createSelector = (...args) => {
   const dependencies = args.slice(0, -1)
-  const reducer = defaultMemoize(args[args.length - 1])
+  const formula = args[args.length - 1]
+  const memoizedFormula = defaultMemoize(formula)
 
-  const selector = state => state
-  selector.selectors = [{
-    path: [], dependsOn: dependencies,
-    selector: (globalState, selectorPath) => {
-      const localState = _.get(globalState, selectorPath)
-      const reducerArgs = dependencies.map(path => {
-        if (typeof path === 'function') path = path(localState, globalState)
-        return _.get(globalState, path)
-      })
-      return reducer(localState, ...reducerArgs)
-    }}]
+  const reducer = state => state
+  const selector = (globalState, selectorPath) => {
+    // console.log(2, globalState, dependencies, selectorPath)
+    const localState = _.get(globalState, selectorPath)
+    const formulaArgs = dependencies.map(path => {
+      if (typeof path === 'function') path = path(localState, globalState)
+      return _.get(globalState, path)
+    })
+    return memoizedFormula(localState, ...formulaArgs)
+  }
+  if (formula.selectors) selector.selectors = formula.selectors
+  reducer.selectors = [{path: [], dependsOn: dependencies, selector}]
 
-  return selector
+  return reducer
 }

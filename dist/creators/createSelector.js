@@ -40,21 +40,23 @@ var createSelector = exports.createSelector = function createSelector() {
   }
 
   var dependencies = args.slice(0, -1);
-  var reducer = defaultMemoize(args[args.length - 1]);
+  var formula = args[args.length - 1];
+  var memoizedFormula = defaultMemoize(formula);
 
-  var selector = function selector(state) {
+  var reducer = function reducer(state) {
     return state;
   };
-  selector.selectors = [{
-    path: [], dependsOn: dependencies,
-    selector: function selector(globalState, selectorPath) {
-      var localState = _lodash2.default.get(globalState, selectorPath);
-      var reducerArgs = dependencies.map(function (path) {
-        if (typeof path === 'function') path = path(localState, globalState);
-        return _lodash2.default.get(globalState, path);
-      });
-      return reducer.apply(undefined, [localState].concat(_toConsumableArray(reducerArgs)));
-    } }];
+  var selector = function selector(globalState, selectorPath) {
+    // console.log(2, globalState, dependencies, selectorPath)
+    var localState = _lodash2.default.get(globalState, selectorPath);
+    var formulaArgs = dependencies.map(function (path) {
+      if (typeof path === 'function') path = path(localState, globalState);
+      return _lodash2.default.get(globalState, path);
+    });
+    return memoizedFormula.apply(undefined, [localState].concat(_toConsumableArray(formulaArgs)));
+  };
+  if (formula.selectors) selector.selectors = formula.selectors;
+  reducer.selectors = [{ path: [], dependsOn: dependencies, selector: selector }];
 
-  return selector;
+  return reducer;
 };
