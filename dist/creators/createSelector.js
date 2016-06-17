@@ -47,7 +47,6 @@ var createSelector = exports.createSelector = function createSelector() {
     return state;
   };
   var selector = function selector(globalState, selectorPath) {
-    // console.log(2, globalState, dependencies, selectorPath)
     var localState = _lodash2.default.get(globalState, selectorPath);
     var formulaArgs = dependencies.map(function (path) {
       if (typeof path === 'function') path = path(localState, globalState);

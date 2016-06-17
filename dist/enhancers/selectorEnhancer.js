@@ -67,16 +67,13 @@ var enhanceReducer = exports.enhanceReducer = function enhanceReducer(reducer) {
   }));
 
   return function (state, action) {
-    return(
-      // console.log(2, state, action, reducer(state, action)) ||
-      selectors.reduce(function (newState, _ref2) {
-        var path = _ref2.path;
-        var selector = _ref2.selector;
+    return selectors.reduce(function (newState, _ref2) {
+      var path = _ref2.path;
+      var selector = _ref2.selector;
 
-        var result = enhanceReducer(selector, depth + 1)((0, _reduxLoop.getModel)(newState), path);
-        return selector.selectors ? result : _lodash2.default.set((0, _reduxLoop.getModel)(newState), path, result);
-      }, depth ? state : reducer(state, action))
-    );
+      var result = enhanceReducer(selector, depth + 1)((0, _reduxLoop.getModel)(newState), path);
+      return selector.selectors ? result : _lodash2.default.set((0, _reduxLoop.getModel)(newState), path, result);
+    }, depth ? state : reducer(state, action));
   };
 };
 

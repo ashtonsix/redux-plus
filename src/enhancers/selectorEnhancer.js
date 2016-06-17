@@ -36,7 +36,6 @@ export const enhanceReducer = (reducer, depth = 0) => {
   )
 
   return (state, action) =>
-    // console.log(2, state, action, reducer(state, action)) ||
     selectors.reduce(
       (newState, {path, selector}) => {
         const result = enhanceReducer(selector, depth + 1)(getModel(newState), path)

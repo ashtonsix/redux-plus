@@ -22,7 +22,6 @@ export const createSelector = (...args) => {
 
   const reducer = state => state
   const selector = (globalState, selectorPath) => {
-    // console.log(2, globalState, dependencies, selectorPath)
     const localState = _.get(globalState, selectorPath)
     const formulaArgs = dependencies.map(path => {
       if (typeof path === 'function') path = path(localState, globalState)
