@@ -1,5 +1,6 @@
 import _ from 'lodash'
-import {getModel} from 'redux-loop'
+import {getModel, getEffect} from 'redux-loop'
+import {createEffect} from '../creators/createEffect'
 
 const AcyclicError = message => ({message})
 const topologicalSort = nodes => {
@@ -23,6 +24,17 @@ const topologicalSort = nodes => {
     .map(({__status, ...node}) => node) // eslint-disable-line no-unused-vars
 }
 
+// Similar to combineReducer from 'redux-loop' but accepts state instead of reducers
+const liftEffects = object =>
+  createEffect(
+    _.mapValues(object, getModel),
+    ..._.flatten(
+      _.values(object)
+        .map(getEffect)
+        .filter(v => v)
+        .map(v => _.map(v.effects, 'factory')))
+  )
+
 export const enhanceReducer = (reducer, depth = 0) => {
   if (!reducer.selectors) return reducer
 
@@ -36,12 +48,16 @@ export const enhanceReducer = (reducer, depth = 0) => {
   )
 
   return (state, action) =>
-    selectors.reduce(
-      (newState, {path, selector}) => {
-        const result = enhanceReducer(selector, depth + 1)(getModel(newState), path)
-        return selector.selectors ? result : _.set(getModel(newState), path, result)
-      },
-      depth ? state : reducer(state, action)
+    liftEffects(
+      selectors.reduce(
+        (newState, {path, selector}) => {
+          const result = enhanceReducer(selector, depth + 1)(getModel(newState), path)
+          return selector.selectors ?
+            result :
+            _.set(getModel(newState), path, result)
+        },
+        depth ? state : reducer(state, action)
+      )
     )
 }
 

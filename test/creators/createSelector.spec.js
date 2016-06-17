@@ -1,20 +1,19 @@
 /* eslint func-names:0, prefer-arrow-callback:0 */
 
 import expect from 'expect'
-import {createStore, createSelector, createReducer, combineReducers} from '../../src/index'
+import {createStore, createSelector, createReducer, createEffect, combineReducers} from '../../src/index'
 
 describe('combineReducers', function () {
+  const counterHandlers = {
+    INCREMENT: state => state + 1,
+    DECREMENT: state => state - 1,
+  }
+
   describe('simpleStore', function () {
-    let counterHandlers
     let reducer
     let store
 
     beforeEach(function () {
-      counterHandlers = {
-        INCREMENT: state => state + 1,
-        DECREMENT: state => state - 1,
-      }
-
       reducer = combineReducers({
         counter: createReducer(counterHandlers, 0),
         counterDoubled: createSelector(
@@ -26,32 +25,20 @@ describe('combineReducers', function () {
     })
 
     it('should compute state on initialization', function () {
-      expect(store.getState()).toEqual({
-        counter: 0,
-        counterDoubled: 0,
-      })
+      expect(store.getState()).toEqual({counter: 0, counterDoubled: 0})
     })
 
     it('should update computed state when actions run', function () {
       store.dispatch('INCREMENT')
-      expect(store.getState()).toEqual({
-        counter: 1,
-        counterDoubled: 2,
-      })
+      expect(store.getState()).toEqual({counter: 1, counterDoubled: 2})
     })
   })
 
   describe('chainedAndNestedStore', function () {
-    let counterHandlers
     let reducer
     let store
 
     beforeEach(function () {
-      counterHandlers = {
-        INCREMENT: state => state + 1,
-        DECREMENT: state => state - 1,
-      }
-
       reducer = combineReducers({
         counter: createReducer(counterHandlers, 0),
         nested: combineReducers({
@@ -82,6 +69,38 @@ describe('combineReducers', function () {
       expect(store.getState().counterHalved).toBe(0.5)
       store.dispatch('INCREMENT')
       expect(store.getState().counterHalved).toBe(1)
+    })
+  })
+
+  describe('computationsThatReturnEffects', function () {
+    let effectHandlers
+    let reducer
+    let store
+
+    beforeEach(function () {
+      effectHandlers = {
+        COUNTER_CHANGED: state => state,
+      }
+
+      reducer = combineReducers({
+        counter: createReducer(counterHandlers, 0),
+        counterUpdater: createSelector(
+          'counter',
+          state => createEffect(state, 'COUNTER_CHANGED')),
+        counterResponder: createReducer(effectHandlers),
+      })
+
+      store = createStore(reducer)
+    })
+
+    it('should dispatch actions from effects asynchronously', function (done) {
+      const successSpy = expect.spyOn(effectHandlers, 'COUNTER_CHANGED')
+      store.dispatch('INCREMENT')
+      expect(successSpy).toNotHaveBeenCalled()
+      setTimeout(() => {
+        expect(successSpy).toHaveBeenCalled()
+        done()
+      })
     })
   })
 })

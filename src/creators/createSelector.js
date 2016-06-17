@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import {getModel} from 'redux-loop'
 
 export const defaultMemoize = func => {
   const cache = {
@@ -9,7 +10,9 @@ export const defaultMemoize = func => {
   return (...args) => {
     if (!cache.args || args.some((v, i) => cache.args[i] !== v)) {
       cache.args = args
-      cache.result = func(...args)
+      const result = func(...args)
+      cache.result = getModel(cache)
+      return result
     }
     return cache.result
   }
