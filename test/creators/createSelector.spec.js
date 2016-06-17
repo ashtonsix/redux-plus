@@ -54,15 +54,19 @@ describe('combineReducers', function () {
 
       reducer = combineReducers({
         counter: createReducer(counterHandlers, 0),
-        counterDoubled: createSelector(
-          'counter',
-          (state, counter) => counter * 2),
+        nested: combineReducers({
+          counterDoubled: createSelector(
+            'counter',
+            (state, counter) => counter * 2),
+        }),
         counterTripled: createSelector(
-          createSelector(
-          'counterDoubled',
-          (state, counter) => counter * 1.5)),
+          combineReducers({
+            nested: createSelector(
+              'nested.counterDoubled',
+              (state, counter) => counter * 1.5),
+          })),
         counterHalved: createSelector(
-          'counterTripled',
+          'counterTripled.nested',
           (state, counter) => counter / 6),
       })
 
@@ -70,20 +74,14 @@ describe('combineReducers', function () {
     })
 
     it('should compute state on initialization', function () {
-      expect(store.getState()).toEqual({
-        counter: 0, counterDoubled: 0, counterTripled: 0, counterHalved: 0,
-      })
+      expect(store.getState().counterHalved).toBe(0)
     })
 
     it('should update computed state when actions run', function () {
       store.dispatch('INCREMENT')
-      expect(store.getState()).toEqual({
-        counter: 1, counterDoubled: 2, counterTripled: 3, counterHalved: 0.5,
-      })
+      expect(store.getState().counterHalved).toBe(0.5)
       store.dispatch('INCREMENT')
-      expect(store.getState()).toEqual({
-        counter: 2, counterDoubled: 4, counterTripled: 6, counterHalved: 1,
-      })
+      expect(store.getState().counterHalved).toBe(1)
     })
   })
 })
