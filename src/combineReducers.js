@@ -18,6 +18,7 @@ export const combineReducers = (reducerMap, ...args) => {
     .reduce((pv, v) => pv.concat(v.selectors), [])
 
   const finalReducer = _combineReducers(reducerMap, ...args)
+  finalReducer.reducerMap = reducerMap
 
   if (selectors.length) {
     finalReducer.selectors = selectors

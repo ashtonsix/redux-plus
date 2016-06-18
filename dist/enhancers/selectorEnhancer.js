@@ -24,6 +24,8 @@ function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in ob
 var AcyclicError = function AcyclicError(message) {
   return { message: message };
 };
+// TODO: to support createDynamicReducer a node is considered to have edge to all parents of nodes it has edges to
+// re-sort selectors after evaluating a dynamicReducer. Memoize if possible
 var topologicalSort = function topologicalSort(nodes) {
   var nodeMap = _lodash2.default.fromPairs(nodes.map(function (node) {
     return [node.path, node];

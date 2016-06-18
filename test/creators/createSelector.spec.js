@@ -103,4 +103,6 @@ describe('combineReducers', function () {
       })
     })
   })
+
+  // TODO: Add test to confirm memoize works (selectors only called when underlying data updates)
 })

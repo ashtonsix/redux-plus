@@ -1,6 +1,7 @@
 import _ from 'lodash'
 import {getModel} from 'redux-loop'
 
+// TODO: make cache length configurable & accessible
 export const defaultMemoize = func => {
   const cache = {
     args: undefined,

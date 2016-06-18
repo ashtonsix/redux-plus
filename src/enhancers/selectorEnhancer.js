@@ -3,6 +3,8 @@ import {getModel, getEffect} from 'redux-loop'
 import {createEffect} from '../creators/createEffect'
 
 const AcyclicError = message => ({message})
+// TODO: to support createDynamicReducer a node is considered to have edge to all parents of nodes it has edges to
+// re-sort selectors after evaluating a dynamicReducer. Memoize if possible
 const topologicalSort = nodes => {
   const nodeMap = _.fromPairs(nodes.map(node => [node.path, node]))
   const visit = (sortedNodes, currentNode) => {

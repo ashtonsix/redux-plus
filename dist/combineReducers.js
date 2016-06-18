@@ -50,6 +50,7 @@ var combineReducers = exports.combineReducers = function combineReducers(reducer
   }, []);
 
   var finalReducer = _reduxLoop.combineReducers.apply(undefined, [reducerMap].concat(args));
+  finalReducer.reducerMap = reducerMap;
 
   if (selectors.length) {
     finalReducer.selectors = selectors;

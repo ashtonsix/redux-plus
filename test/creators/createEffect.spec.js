@@ -3,7 +3,7 @@
 import expect from 'expect'
 import {createStore, createEffect, createReducer} from '../../src/index'
 
-describe('effect', function () {
+describe('createEffect', function () {
   let spyTargets
   let handlers
   let reducer
