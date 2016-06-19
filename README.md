@@ -4,13 +4,15 @@ redux-plus
 
 The core of Redux is simple. But it comes with a big ecosystem, middleware, action creators, selectors and other things attached that slow down development - a single change in specs shouldn't require changes in 5+ locations to implement. redux-plus makes developers more productive by finding one place for all state-related code: the reducer.
 
-redux-plus makes three non-breaking changes to redux:
+redux-plus makes four non-breaking changes to redux:
 
 **dispatchEnhancer**: When using redux-plus you should dispatch actions directly to the store using `store.dispatch`. The API is nicer now: `store.dispatch('INCREMENT', 5)` & `store.dispatch({type: 'INCREMENT', payload: 5})` are equivalent.
 
 **effectEnhancer**: Running side-effects inside the reducer is bad because it makes your state hard to predict & test. With redux-plus you can return effects from the reducer which run in a different context. Effects can optionally return actions that are dispatched to the store.
 
 **selectorEnhancer**: Selectors are like formulas in a spreadsheet. They compute derived data and only update when the data they depend on does. Selectors can reference other selectors and their formulas (functions) can contain reducers, effects & other selectors.
+
+**dynamicReducerEnhancer**: Some (mostly performance-related) problems are impossible to solve statically. redux-plus allows you to generate reducers on the fly. *This feature is very powerful and should be used with caution and you probably won't need it.*
 
 ### Usage
 ```js

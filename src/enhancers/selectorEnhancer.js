@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import {getModel, getEffect} from 'redux-loop'
-import {createEffect} from '../creators/createEffect'
+import {createEffect} from '../createEffect'
 
 const AcyclicError = message => ({message})
 // TODO: to support createDynamicReducer a node is considered to have edge to all parents of nodes it has edges to
@@ -40,6 +40,7 @@ const liftEffects = object =>
 export const enhanceReducer = (reducer, depth = 0) => {
   if (!reducer.selectors) return reducer
 
+  // TODO: Support dynamic dependency paths
   const selectors = topologicalSort(
     reducer.selectors.map(selector => ({
       ...selector,

@@ -4,29 +4,29 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createEffect = require('./createEffect');
+var _api = require('./api');
 
-Object.defineProperty(exports, 'createEffect', {
+Object.defineProperty(exports, 'api', {
   enumerable: true,
   get: function get() {
-    return _createEffect.createEffect;
+    return _api.api;
   }
 });
 
-var _createReducer = require('./createReducer');
+var _promise = require('./promise');
 
-Object.defineProperty(exports, 'createReducer', {
+Object.defineProperty(exports, 'promise', {
   enumerable: true,
   get: function get() {
-    return _createReducer.createReducer;
+    return _promise.promise;
   }
 });
 
-var _createSelector = require('./createSelector');
+var _wait = require('./wait');
 
-Object.defineProperty(exports, 'createSelector', {
+Object.defineProperty(exports, 'wait', {
   enumerable: true,
   get: function get() {
-    return _createSelector.createSelector;
+    return _wait.wait;
   }
 });

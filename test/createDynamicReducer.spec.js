@@ -2,7 +2,7 @@
 /* eslint func-names:0, prefer-arrow-callback:0 */
 
 import expect from 'expect'
-import {createReducer, createSelector, combineReducers} from '../../src/index'
+import {createReducer, createSelector, combineReducers} from '../src/index'
 
 const createDynamicReducer = () => {}
 const updateWith = (originalArr, newArr, equivalenceCheck) => {}

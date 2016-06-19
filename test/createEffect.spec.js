@@ -1,7 +1,7 @@
 /* eslint func-names:0, prefer-arrow-callback:0 */
 
 import expect from 'expect'
-import {createStore, createEffect, createReducer} from '../../src/index'
+import {createStore, createEffect, createReducer} from '../src/index'
 
 describe('createEffect', function () {
   let spyTargets

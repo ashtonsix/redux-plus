@@ -13,7 +13,7 @@ var _lodash2 = _interopRequireDefault(_lodash);
 
 var _reduxLoop = require('redux-loop');
 
-var _createEffect = require('../creators/createEffect');
+var _createEffect = require('../createEffect');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -72,6 +72,7 @@ var enhanceReducer = exports.enhanceReducer = function enhanceReducer(reducer) {
 
   if (!reducer.selectors) return reducer;
 
+  // TODO: Support dynamic dependency paths
   var selectors = topologicalSort(reducer.selectors.map(function (selector) {
     return _extends({}, selector, {
       path: _lodash2.default.toPath(selector.path).join('.'),
