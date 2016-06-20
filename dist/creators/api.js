@@ -38,14 +38,14 @@ var generateRequest = function generateRequest(config) {
 var _api = function _api(requestConfig) {
   var reducer = arguments.length <= 1 || arguments[1] === undefined ? _getModel.getModel : arguments[1];
   return function (state, action) {
-    var effect = function effect() {
+    var generator = function generator() {
       return generateRequest(requestConfig)(state, action).then(function (response) {
         return { type: action.type + '_SUCCESS', payload: response.data, meta: { response: response } };
       }, function (error) {
         return { type: action.type + '_FAILURE', payload: error };
       });
     };
-    return (0, _index.createEffect)(reducer(state, action), effect);
+    return (0, _index.createEffect)(reducer(state, action), generator);
   };
 };
 

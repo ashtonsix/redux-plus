@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import {createEffect} from './createEffect'
 import {getModel} from './helpers/getModel'
-import {getEffect} from './helpers/getEffect'
+import {getGenerators} from './helpers/getGenerators'
 
 const extendSelectorPaths = (reducer, fragment) => {
   if (!reducer.selectors) return reducer
@@ -28,18 +28,18 @@ const _combineReducers = (reducerMap) => {
   return function finalReducer(state = root, action) {
     let hasChanged = false
 
-    const [model, effects] = Object.keys(reducerMap).reduce(([_model, _effects], key) => {
+    const [model, generators] = Object.keys(reducerMap).reduce(([_model, _generators], key) => {
       const reducer = reducerMap[key]
       const previousStateForKey = getter(state, key)
       const nextStateForKey = reducer(previousStateForKey, action)
 
       hasChanged = hasChanged || nextStateForKey !== previousStateForKey
-      return [setter(_model, key, getModel(nextStateForKey)), _effects.concat(getEffect(nextStateForKey))]
+      return [setter(_model, key, getModel(nextStateForKey)), _generators.concat(getGenerators(nextStateForKey))]
     }, [root, []])
 
     return createEffect(
       hasChanged ? model : state,
-      ...effects
+      ...generators
     )
   }
 }

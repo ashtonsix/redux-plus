@@ -17,7 +17,7 @@ var _createEffect = require('./createEffect');
 
 var _getModel = require('./helpers/getModel');
 
-var _getEffect = require('./helpers/getEffect');
+var _getGenerators = require('./helpers/getGenerators');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -60,23 +60,23 @@ var _combineReducers = function _combineReducers(reducerMap) {
       var _ref2 = _slicedToArray(_ref, 2);
 
       var _model = _ref2[0];
-      var _effects = _ref2[1];
+      var _generators = _ref2[1];
 
       var reducer = reducerMap[key];
       var previousStateForKey = getter(state, key);
       var nextStateForKey = reducer(previousStateForKey, action);
 
       hasChanged = hasChanged || nextStateForKey !== previousStateForKey;
-      return [setter(_model, key, (0, _getModel.getModel)(nextStateForKey)), _effects.concat((0, _getEffect.getEffect)(nextStateForKey))];
+      return [setter(_model, key, (0, _getModel.getModel)(nextStateForKey)), _generators.concat((0, _getGenerators.getGenerators)(nextStateForKey))];
     }, [root, []]);
 
     var _Object$keys$reduce2 = _slicedToArray(_Object$keys$reduce, 2);
 
     var model = _Object$keys$reduce2[0];
-    var effects = _Object$keys$reduce2[1];
+    var generators = _Object$keys$reduce2[1];
 
 
-    return _createEffect.createEffect.apply(undefined, [hasChanged ? model : state].concat(_toConsumableArray(effects)));
+    return _createEffect.createEffect.apply(undefined, [hasChanged ? model : state].concat(_toConsumableArray(generators)));
   };
 };
 

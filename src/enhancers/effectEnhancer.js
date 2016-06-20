@@ -1,14 +1,13 @@
-import {applyMiddleware, compose} from 'redux'
 import {getModel} from '../helpers/getModel'
-import {getEffect} from '../helpers/getEffect'
+import {getGenerators} from '../helpers/getGenerators'
 
-const install = (next) => (reducer, initialState, enhancer) => {
-  let currentEffect = []
-  const [initialModel, initialEffect] = [getModel(initialState), getEffect(initialState)]
+export const effectEnhancer = (next) => (reducer, initialState, enhancer) => {
+  let currentGenerators = []
+  const [initialModel, initialGenerators] = [getModel(initialState), getGenerators(initialState)]
 
   const enhanceReducer = _reducer => (state, action) => {
     const result = _reducer(state, action)
-    currentEffect = getEffect(result)
+    currentGenerators = getGenerators(result)
     return getModel(result)
   }
 
@@ -22,26 +21,15 @@ const install = (next) => (reducer, initialState, enhancer) => {
   const _dispatch = store.dispatch
   store.dispatch = (...args) => {
     const result = _dispatch(...args)
-    runEffect(currentEffect)
-    currentEffect = []
+    runEffect(currentGenerators)
+    currentGenerators = []
     return result
   }
 
   const _replaceReducer = store.replaceReducer
   store.replaceReducer = _reducer => _replaceReducer(enhanceReducer(_reducer))
 
-  runEffect(initialEffect)
+  runEffect(initialGenerators)
 
   return store
 }
-
-const stringToType = () => next => action => {
-  if (typeof action === 'string') action = {type: action, payload: null}
-  next(action)
-  return action
-}
-
-export const effectEnhancer = compose(
-  install,
-  applyMiddleware(stringToType)
-)

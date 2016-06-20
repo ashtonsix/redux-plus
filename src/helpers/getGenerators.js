@@ -1,2 +1,2 @@
-export const getEffect = effect =>
+export const getGenerators = effect =>
   (effect && effect.isEffect) ? effect[1] : []

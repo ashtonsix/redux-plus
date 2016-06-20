@@ -8,9 +8,9 @@ import {getModel} from '../helpers/getModel'
 import {createEffect} from '../index'
 
 export const promise = (promiseGenerator, reducer = getModel) => (state, action) => {
-  const effect = () =>
+  const generator = () =>
     Promise.resolve(promiseGenerator(state, action)).then(
       success => ({type: `${action.type}_SUCCESS`, payload: success, meta: {success}}),
       failure => ({type: `${action.type}_FAILURE`, payload: failure}))
-  return createEffect(reducer(state, action), effect)
+  return createEffect(reducer(state, action), generator)
 }

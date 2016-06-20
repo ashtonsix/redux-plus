@@ -19,11 +19,11 @@ const generateRequest = (config) =>
       xr({[config.method === 'GET' ? 'params' : 'data']: payload, ...config})
 
 const _api = (requestConfig, reducer = getModel) => (state, action) => {
-  const effect = () =>
+  const generator = () =>
     generateRequest(requestConfig)(state, action).then(
       response => ({type: `${action.type}_SUCCESS`, payload: response.data, meta: {response}}),
       error => ({type: `${action.type}_FAILURE`, payload: error}))
-  return createEffect(reducer(state, action), effect)
+  return createEffect(reducer(state, action), generator)
 }
 
 export const api = (...args) =>

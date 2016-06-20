@@ -1,5 +1,5 @@
-export const createEffect = (state, ...effects) => {
-  const effect = [state, effects]
+export const createEffect = (state, ...generators) => {
+  const effect = [state, generators]
   effect.isEffect = true
   return effect
 }

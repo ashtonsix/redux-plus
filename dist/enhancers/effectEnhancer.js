@@ -5,23 +5,21 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.effectEnhancer = undefined;
 
-var _redux = require('redux');
-
 var _getModel = require('../helpers/getModel');
 
-var _getEffect = require('../helpers/getEffect');
+var _getGenerators = require('../helpers/getGenerators');
 
-var install = function install(next) {
+var effectEnhancer = exports.effectEnhancer = function effectEnhancer(next) {
   return function (reducer, initialState, enhancer) {
-    var currentEffect = [];
+    var currentGenerators = [];
     var initialModel = (0, _getModel.getModel)(initialState);
-    var initialEffect = (0, _getEffect.getEffect)(initialState);
+    var initialGenerators = (0, _getGenerators.getGenerators)(initialState);
 
 
     var enhanceReducer = function enhanceReducer(_reducer) {
       return function (state, action) {
         var result = _reducer(state, action);
-        currentEffect = (0, _getEffect.getEffect)(result);
+        currentGenerators = (0, _getGenerators.getGenerators)(result);
         return (0, _getModel.getModel)(result);
       };
     };
@@ -41,8 +39,8 @@ var install = function install(next) {
     var _dispatch = store.dispatch;
     store.dispatch = function () {
       var result = _dispatch.apply(undefined, arguments);
-      runEffect(currentEffect);
-      currentEffect = [];
+      runEffect(currentGenerators);
+      currentGenerators = [];
       return result;
     };
 
@@ -51,20 +49,8 @@ var install = function install(next) {
       return _replaceReducer(enhanceReducer(_reducer));
     };
 
-    runEffect(initialEffect);
+    runEffect(initialGenerators);
 
     return store;
   };
 };
-
-var stringToType = function stringToType() {
-  return function (next) {
-    return function (action) {
-      if (typeof action === 'string') action = { type: action, payload: null };
-      next(action);
-      return action;
-    };
-  };
-};
-
-var effectEnhancer = exports.effectEnhancer = (0, _redux.compose)(install, (0, _redux.applyMiddleware)(stringToType));
