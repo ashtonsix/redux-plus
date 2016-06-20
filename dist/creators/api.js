@@ -20,7 +20,7 @@ var _xr = require('xr');
 
 var _xr2 = _interopRequireDefault(_xr);
 
-var _reduxLoop = require('redux-loop');
+var _getModel = require('../helpers/getModel');
 
 var _index = require('../index');
 
@@ -36,7 +36,7 @@ var generateRequest = function generateRequest(config) {
 };
 
 var _api = function _api(requestConfig) {
-  var reducer = arguments.length <= 1 || arguments[1] === undefined ? _reduxLoop.getModel : arguments[1];
+  var reducer = arguments.length <= 1 || arguments[1] === undefined ? _getModel.getModel : arguments[1];
   return function (state, action) {
     var effect = function effect() {
       return generateRequest(requestConfig)(state, action).then(function (response) {

@@ -1,6 +1,6 @@
 import _ from 'lodash'
-import {getModel, getEffect} from 'redux-loop'
-import {createEffect} from '../createEffect'
+import {getModel} from '../helpers/getModel'
+import {liftEffects} from '../helpers/liftEffects'
 
 const AcyclicError = message => ({message})
 // TODO: to support createDynamicReducer a node is considered to have edge to all parents of nodes it has edges to
@@ -25,17 +25,6 @@ const topologicalSort = nodes => {
     .reduce(visit, [])
     .map(({__status, ...node}) => node) // eslint-disable-line no-unused-vars
 }
-
-// Similar to combineReducer from 'redux-loop' but accepts state instead of reducers
-const liftEffects = object =>
-  createEffect(
-    _.mapValues(object, getModel),
-    ..._.flatten(
-      _.values(object)
-        .map(getEffect)
-        .filter(v => v)
-        .map(v => _.map(v.effects, 'factory')))
-  )
 
 export const enhanceReducer = (reducer, depth = 0) => {
   if (!reducer.selectors) return reducer

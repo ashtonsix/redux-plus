@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.promise = undefined;
 
-var _reduxLoop = require('redux-loop');
+var _getModel = require('../helpers/getModel');
 
 var _index = require('../index');
 
@@ -16,7 +16,7 @@ var _index = require('../index');
  */
 
 var promise = exports.promise = function promise(promiseGenerator) {
-  var reducer = arguments.length <= 1 || arguments[1] === undefined ? _reduxLoop.getModel : arguments[1];
+  var reducer = arguments.length <= 1 || arguments[1] === undefined ? _getModel.getModel : arguments[1];
   return function (state, action) {
     var effect = function effect() {
       return Promise.resolve(promiseGenerator(state, action)).then(function (success) {

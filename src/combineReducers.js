@@ -1,5 +1,7 @@
 import _ from 'lodash'
-import {combineReducers as _combineReducers} from 'redux-loop'
+import {createEffect} from './createEffect'
+import {getModel} from './helpers/getModel'
+import {getEffect} from './helpers/getEffect'
 
 const extendSelectorPaths = (reducer, fragment) => {
   if (!reducer.selectors) return reducer
@@ -9,6 +11,37 @@ const extendSelectorPaths = (reducer, fragment) => {
     path: [fragment, ...selector.path],
   }))
   return reducer
+}
+
+const defaultGetter = (state, key) => state[key]
+
+const defaultSetter = (state, key, value) => ({
+  ...state,
+  [key]: value,
+})
+
+const _combineReducers = (reducerMap) => {
+  const getter = defaultGetter
+  const setter = defaultSetter
+  const root = {}
+
+  return function finalReducer(state = root, action) {
+    let hasChanged = false
+
+    const [model, effects] = Object.keys(reducerMap).reduce(([_model, _effects], key) => {
+      const reducer = reducerMap[key]
+      const previousStateForKey = getter(state, key)
+      const nextStateForKey = reducer(previousStateForKey, action)
+
+      hasChanged = hasChanged || nextStateForKey !== previousStateForKey
+      return [setter(_model, key, getModel(nextStateForKey)), _effects.concat(getEffect(nextStateForKey))]
+    }, [root, []])
+
+    return createEffect(
+      hasChanged ? model : state,
+      ...effects
+    )
+  }
 }
 
 export const combineReducers = (reducerMap, ...args) => {

@@ -9,7 +9,7 @@ var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _reduxLoop = require('redux-loop');
+var _getModel = require('./helpers/getModel');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -32,7 +32,7 @@ var defaultMemoize = exports.defaultMemoize = function defaultMemoize(func) {
     })) {
       cache.args = args;
       var result = func.apply(undefined, args);
-      cache.result = (0, _reduxLoop.getModel)(cache);
+      cache.result = (0, _getModel.getModel)(cache);
       return result;
     }
     return cache.result;

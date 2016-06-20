@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import {getModel} from 'redux-loop'
+import {getModel} from './helpers/getModel'
 
 // TODO: make cache length configurable & accessible
 export const defaultMemoize = func => {

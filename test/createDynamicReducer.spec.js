@@ -15,22 +15,28 @@ describe.skip('createDynamicReducer', function () {
     reducer = combineReducers({
       todos: createReducer(
         {UPDATE_TODOS: (state, {payload}) => payload},
-        [
-          {id: 0, name: 'Check the trunk.', complete: false},
-          {id: 1, name: 'Move the body.', complete: false},
-        ]),
+        {
+          result: [0, 1],
+          entities: {
+            0: {id: 0, name: 'Check the trunk.', complete: false},
+            1: {id: 1, name: 'Move the body.', complete: false},
+          }
+        }),
       searchQuery: createReducer(
-        {UPDATE_SEARCH: (state, {payload}) => payload},
+        {
+          UPDATE_SEARCH_TEXT: (state, {payload}) => ({...state, text: payload}),
+          UPDATE_SEARCH_TOGGLE: (state, {payload}) => ({...state, [payload]: !state[payload]}),
+        },
         {text: '', completeOnly: false}),
       searchResults: createDynamicReducer(
         createSelector(
-          'todos',
+          'todos.result',
           (state = combineReducers([], []), todos) =>
             combineReducers(
               updateWith(
                 state.reducerMap,
-                todos.map(({id}) => createSelector(
-                  `todos.${id}`,
+                todos.map(todoId => createSelector(
+                  `todos.entities.${id}`,
                   'searchQuery',
                   (_s, todo, searchQuery) => ({
                     ...todo,

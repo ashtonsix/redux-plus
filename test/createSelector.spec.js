@@ -3,7 +3,7 @@
 import expect from 'expect'
 import {createStore, createSelector, createReducer, createEffect, combineReducers} from '../src/index'
 
-describe('combineReducers', function () {
+describe('createSelector', function () {
   const counterHandlers = {
     INCREMENT: state => state + 1,
     DECREMENT: state => state - 1,

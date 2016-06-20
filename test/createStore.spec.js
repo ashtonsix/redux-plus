@@ -27,13 +27,6 @@ describe('createStore', function () {
     expect(reducerSpy).toHaveBeenCalled()
   })
 
-  it('should ignore null actions', function () {
-    const reducerSpy = expect.spyOn(spyTargets, 'reducer')
-    store.dispatch(null)
-    store.dispatch(undefined)
-    expect(reducerSpy).toNotHaveBeenCalled()
-  })
-
   it("should update it's state when an action is dispatched", function () {
     store.dispatch({type: 'GET_DATA'})
     expect(store.getState().prevAction).toEqual({type: 'GET_DATA'})
