@@ -39,12 +39,3 @@ Object.defineProperty(exports, 'liftEffects', {
     return _liftEffects.liftEffects;
   }
 });
-
-var _updateWith = require('./updateWith');
-
-Object.defineProperty(exports, 'updateWith', {
-  enumerable: true,
-  get: function get() {
-    return _updateWith.updateWith;
-  }
-});

@@ -26,9 +26,9 @@ var effectEnhancer = exports.effectEnhancer = function effectEnhancer(next) {
 
     var store = next(enhanceReducer(reducer), initialModel, enhancer);
 
-    var runEffect = function runEffect(effect) {
-      return Promise.all(effect.map(function (e) {
-        return Promise.resolve(typeof e === 'function' ? e() : e);
+    var runEffect = function runEffect(generators) {
+      return Promise.all(generators.map(function (g) {
+        return Promise.resolve(typeof g === 'function' ? g() : g);
       })).then(function (actions) {
         return actions.forEach(function (a) {
           return a != null && store.dispatch(a);

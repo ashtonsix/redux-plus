@@ -37,25 +37,51 @@ const _combineReducers = (reducerMap) => {
       return [setter(_model, key, getModel(nextStateForKey)), _generators.concat(getGenerators(nextStateForKey))]
     }, [root, []])
 
-    return createEffect(
-      hasChanged ? model : state,
-      ...generators
-    )
+    const result = hasChanged ? model : state
+    return generators.length ?
+      createEffect(result, ...generators) :
+      result
   }
 }
 
-export const combineReducers = (reducerMap, ...args) => {
-  const selectors = _.toPairs(reducerMap)
-    .filter(([, reducer]) => reducer.selectors)
-    .map(([key, reducer]) => extendSelectorPaths(reducer, key))
-    .reduce((pv, v) => pv.concat(v.selectors), [])
+const addMetadata = (reducer, options = {}) => {
+  const {getter = defaultGetter, setter = defaultSetter} = options
+  const get = (state, key) => {
+    key = _.toPath(key)
+    const result = getter(state, key[0])
+    if (key.length === 1) return result
+    return reducer.children[key].get(result, key.slice(1))
+  }
+  const set = (state, key, value) => {
+    key = _.toPath(key)
+    if (key.length === 1) return setter(state, key[0], value)
+    return setter(
+      state, key[0],
+      reducer.children[key].set(
+        get(state, key[0]), key.slice(1), value))
+  }
+  const traverse = (_reducer) => (visitor, path = []) => {
+    if (!_reducer) return
+    if (_reducer.meta) _reducer = _reducer.meta
+    visitor(_reducer, path)
+    _.mapValues(_reducer.children,
+      (child, childName) =>
+        traverse(child)(visitor, path.concat(childName)))
+  }
 
-  const finalReducer = _combineReducers(reducerMap, ...args)
+  reducer.meta = {reducer, get, set, traverse: traverse(reducer)}
+  return reducer
+}
+
+export const combineReducers = (reducerMap, rootState = {}, options = {}) => {
+  const finalReducer = _combineReducers(reducerMap, rootState, options)
   finalReducer.reducerMap = reducerMap
 
-  if (selectors.length) {
-    finalReducer.selectors = selectors
-  }
+  addMetadata(finalReducer, options)
+  finalReducer.meta.children = _.mapValues(reducerMap, child => {
+    if (!child.meta) addMetadata(child)
+    return _.set(child.meta, 'parent', finalReducer.meta)
+  })
 
   return finalReducer
 }

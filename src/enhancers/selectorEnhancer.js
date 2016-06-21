@@ -13,7 +13,7 @@ const topologicalSort = nodes => {
     }
     if (currentNode.__status === 'inactive') {
       currentNode.__status = 'active'
-      sortedNodes = currentNode.dependsOn.map(key => nodeMap[key]).filter(n => n).reduce(visit, sortedNodes)
+      sortedNodes = currentNode.dependencies.map(key => nodeMap[key]).filter(n => n).reduce(visit, sortedNodes)
       currentNode.__status = 'complete'
       return sortedNodes.concat(currentNode)
     }
@@ -27,14 +27,20 @@ const topologicalSort = nodes => {
 }
 
 export const enhanceReducer = (reducer, depth = 0) => {
-  if (!reducer.selectors) return reducer
+  let selectors = []
+  if (reducer && reducer.meta) {
+    reducer.meta.traverse((node, path) => {
+      if (node.selector) selectors.push({...node.selector, path})
+    })
+  }
+  if (!selectors.length) return reducer
 
   // TODO: Support dynamic dependency paths
-  const selectors = topologicalSort(
-    reducer.selectors.map(selector => ({
+  selectors = topologicalSort(
+    selectors.map(selector => ({
       ...selector,
       path: _.toPath(selector.path).join('.'),
-      dependsOn: selector.dependsOn.map(dependency =>
+      dependencies: selector.dependencies.map(dependency =>
         _.toPath(dependency).join('.')),
     }))
   )
@@ -42,11 +48,10 @@ export const enhanceReducer = (reducer, depth = 0) => {
   return (state, action) =>
     liftEffects(
       selectors.reduce(
-        (newState, {path, selector}) => {
-          const result = enhanceReducer(selector, depth + 1)(getModel(newState), path)
-          return selector.selectors ?
-            result :
-            _.set(getModel(newState), path, result)
+        (newState, {path, reducer: _reducer}) => {
+          const result = _reducer(getModel(newState), path)
+          path = _.toPath(path).filter(v => v).join('.')
+          return _.set(getModel(newState), path, result)
         },
         depth ? state : reducer(state, action)
       )

@@ -76,36 +76,58 @@ var _combineReducers = function _combineReducers(reducerMap) {
     var generators = _Object$keys$reduce2[1];
 
 
-    return _createEffect.createEffect.apply(undefined, [hasChanged ? model : state].concat(_toConsumableArray(generators)));
+    var result = hasChanged ? model : state;
+    return generators.length ? _createEffect.createEffect.apply(undefined, [result].concat(_toConsumableArray(generators))) : result;
   };
 };
 
+var addMetadata = function addMetadata(reducer) {
+  var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+  var _options$getter = options.getter;
+  var getter = _options$getter === undefined ? defaultGetter : _options$getter;
+  var _options$setter = options.setter;
+  var setter = _options$setter === undefined ? defaultSetter : _options$setter;
+
+  var get = function get(state, key) {
+    key = _lodash2.default.toPath(key);
+    var result = getter(state, key[0]);
+    if (key.length === 1) return result;
+    return reducer.children[key].get(result, key.slice(1));
+  };
+  var set = function set(state, key, value) {
+    key = _lodash2.default.toPath(key);
+    if (key.length === 1) return setter(state, key[0], value);
+    return setter(state, key[0], reducer.children[key].set(get(state, key[0]), key.slice(1), value));
+  };
+  var traverse = function traverse(_reducer) {
+    return function (visitor) {
+      var path = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
+
+      if (!_reducer) return;
+      if (_reducer.meta) _reducer = _reducer.meta;
+      visitor(_reducer, path);
+      _lodash2.default.mapValues(_reducer.children, function (child, childName) {
+        return traverse(child)(visitor, path.concat(childName));
+      });
+    };
+  };
+
+  reducer.meta = { reducer: reducer, get: get, set: set, traverse: traverse(reducer) };
+  return reducer;
+};
+
 var combineReducers = exports.combineReducers = function combineReducers(reducerMap) {
-  for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    args[_key - 1] = arguments[_key];
-  }
+  var rootState = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+  var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
 
-  var selectors = _lodash2.default.toPairs(reducerMap).filter(function (_ref3) {
-    var _ref4 = _slicedToArray(_ref3, 2);
-
-    var reducer = _ref4[1];
-    return reducer.selectors;
-  }).map(function (_ref5) {
-    var _ref6 = _slicedToArray(_ref5, 2);
-
-    var key = _ref6[0];
-    var reducer = _ref6[1];
-    return extendSelectorPaths(reducer, key);
-  }).reduce(function (pv, v) {
-    return pv.concat(v.selectors);
-  }, []);
-
-  var finalReducer = _combineReducers.apply(undefined, [reducerMap].concat(args));
+  var finalReducer = _combineReducers(reducerMap, rootState, options);
   finalReducer.reducerMap = reducerMap;
 
-  if (selectors.length) {
-    finalReducer.selectors = selectors;
-  }
+  addMetadata(finalReducer, options);
+  finalReducer.meta.children = _lodash2.default.mapValues(reducerMap, function (child) {
+    if (!child.meta) addMetadata(child);
+    return _lodash2.default.set(child.meta, 'parent', finalReducer.meta);
+  });
 
   return finalReducer;
 };

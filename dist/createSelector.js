@@ -62,5 +62,10 @@ var createSelector = exports.createSelector = function createSelector() {
   if (formula.selectors) selector.selectors = formula.selectors;
   reducer.selectors = [{ path: [], dependsOn: dependencies, selector: selector }];
 
+  reducer.meta = {
+    reducer: reducer, selector: { dependencies: dependencies, reducer: selector },
+    children: { '': _lodash2.default.set(_lodash2.default.get(formula, 'meta'), 'parent', reducer.meta) }
+  };
+
   return reducer;
 };

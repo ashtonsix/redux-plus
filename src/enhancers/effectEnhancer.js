@@ -13,9 +13,9 @@ export const effectEnhancer = (next) => (reducer, initialState, enhancer) => {
 
   const store = next(enhanceReducer(reducer), initialModel, enhancer)
 
-  const runEffect = effect =>
+  const runEffect = generators =>
     Promise
-      .all(effect.map(e => Promise.resolve(typeof e === 'function' ? e() : e)))
+      .all(generators.map(g => Promise.resolve(typeof g === 'function' ? g() : g)))
       .then(actions => actions.forEach(a => a != null && store.dispatch(a)))
 
   const _dispatch = store.dispatch

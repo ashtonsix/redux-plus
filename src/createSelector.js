@@ -36,5 +36,10 @@ export const createSelector = (...args) => {
   if (formula.selectors) selector.selectors = formula.selectors
   reducer.selectors = [{path: [], dependsOn: dependencies, selector}]
 
+  reducer.meta = {
+    reducer, selector: {dependencies, reducer: selector},
+    children: {'': _.set(_.get(formula, 'meta'), 'parent', reducer.meta)},
+  }
+
   return reducer
 }

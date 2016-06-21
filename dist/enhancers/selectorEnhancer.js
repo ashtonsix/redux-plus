@@ -34,7 +34,7 @@ var topologicalSort = function topologicalSort(nodes) {
     }
     if (currentNode.__status === 'inactive') {
       currentNode.__status = 'active';
-      sortedNodes = currentNode.dependsOn.map(function (key) {
+      sortedNodes = currentNode.dependencies.map(function (key) {
         return nodeMap[key];
       }).filter(function (n) {
         return n;
@@ -59,13 +59,19 @@ var topologicalSort = function topologicalSort(nodes) {
 var enhanceReducer = exports.enhanceReducer = function enhanceReducer(reducer) {
   var depth = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
 
-  if (!reducer.selectors) return reducer;
+  var selectors = [];
+  if (reducer && reducer.meta) {
+    reducer.meta.traverse(function (node, path) {
+      if (node.selector) selectors.push(_extends({}, node.selector, { path: path }));
+    });
+  }
+  if (!selectors.length) return reducer;
 
   // TODO: Support dynamic dependency paths
-  var selectors = topologicalSort(reducer.selectors.map(function (selector) {
+  selectors = topologicalSort(selectors.map(function (selector) {
     return _extends({}, selector, {
       path: _lodash2.default.toPath(selector.path).join('.'),
-      dependsOn: selector.dependsOn.map(function (dependency) {
+      dependencies: selector.dependencies.map(function (dependency) {
         return _lodash2.default.toPath(dependency).join('.');
       })
     });
@@ -74,10 +80,13 @@ var enhanceReducer = exports.enhanceReducer = function enhanceReducer(reducer) {
   return function (state, action) {
     return (0, _liftEffects.liftEffects)(selectors.reduce(function (newState, _ref2) {
       var path = _ref2.path;
-      var selector = _ref2.selector;
+      var _reducer = _ref2.reducer;
 
-      var result = enhanceReducer(selector, depth + 1)((0, _getModel.getModel)(newState), path);
-      return selector.selectors ? result : _lodash2.default.set((0, _getModel.getModel)(newState), path, result);
+      var result = _reducer((0, _getModel.getModel)(newState), path);
+      path = _lodash2.default.toPath(path).filter(function (v) {
+        return v;
+      }).join('.');
+      return _lodash2.default.set((0, _getModel.getModel)(newState), path, result);
     }, depth ? state : reducer(state, action)));
   };
 };
