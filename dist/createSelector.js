@@ -11,6 +11,8 @@ var _lodash2 = _interopRequireDefault(_lodash);
 
 var _getModel = require('./helpers/getModel');
 
+var _addMetadata = require('./helpers/addMetadata');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -59,13 +61,9 @@ var createSelector = exports.createSelector = function createSelector() {
     });
     return memoizedFormula.apply(undefined, [localState].concat(_toConsumableArray(formulaArgs)));
   };
-  if (formula.selectors) selector.selectors = formula.selectors;
-  reducer.selectors = [{ path: [], dependsOn: dependencies, selector: selector }];
 
-  reducer.meta = {
-    reducer: reducer, selector: { dependencies: dependencies, reducer: selector },
-    children: { '': _lodash2.default.set(_lodash2.default.get(formula, 'meta'), 'parent', reducer.meta) }
-  };
+  (0, _addMetadata.addMetadata)(reducer, { '': formula });
+  reducer.meta.selector = { dependencies: dependencies, reducer: selector };
 
   return reducer;
 };

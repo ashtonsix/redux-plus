@@ -1,5 +1,6 @@
 import _ from 'lodash'
 import {getModel} from './helpers/getModel'
+import {addMetadata} from './helpers/addMetadata'
 
 // TODO: make cache length configurable & accessible
 export const defaultMemoize = func => {
@@ -33,13 +34,9 @@ export const createSelector = (...args) => {
     })
     return memoizedFormula(localState, ...formulaArgs)
   }
-  if (formula.selectors) selector.selectors = formula.selectors
-  reducer.selectors = [{path: [], dependsOn: dependencies, selector}]
 
-  reducer.meta = {
-    reducer, selector: {dependencies, reducer: selector},
-    children: {'': _.set(_.get(formula, 'meta'), 'parent', reducer.meta)},
-  }
+  addMetadata(reducer, {'': formula})
+  reducer.meta.selector = {dependencies, reducer: selector}
 
   return reducer
 }

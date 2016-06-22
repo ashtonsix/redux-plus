@@ -34,7 +34,7 @@ describe.skip('createDynamicReducer', function () {
           (state = combineReducers([], []), todos) =>
             combineReducers(
               updateWith(
-                state.reducerMap,
+                state.meta.children,
                 todos.map(todoId => createSelector(
                   `todos.entities.${id}`,
                   'searchQuery',
@@ -44,7 +44,7 @@ describe.skip('createDynamicReducer', function () {
                       (todo.complete || !searchQuery.completeOnly) &&
                       (todo.name.indexOf(searchQuery.text) !== -1),
                   }))),
-                'cache.args.1'
+                'reducer.cache.args.1'
               )
             )
         )

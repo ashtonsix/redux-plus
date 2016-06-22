@@ -21,7 +21,7 @@ createDynamicReducer(
     (state = combineReducers([], []), todos) =>
       combineReducers(
         updateWith(
-          state.reducerMap,
+          state.meta.children,
           todos.map(({id}) => createSelector(
             `todos.${id}`,
             'searchQuery',
@@ -31,13 +31,14 @@ createDynamicReducer(
                 (todo.complete || !searchQuery.completeOnly) &&
                 (todo.name.indexOf(searchQuery.text) !== -1),
             }))),
-          'cache.args.1'
+          'reducer.cache.args.1'
         )
       )
   )
 )
  */
 
+import _ from 'lodash'
 import {createDynamicReducer, createSelector, combineReducers} from '../index'
 import {updateWith} from './updateWith'
 
@@ -53,11 +54,11 @@ export const createArraySelector = (arrayPointer, itemResolver, dependencies, se
       (state = combineReducers([], []), items) =>
         combineReducers(
           updateWith(
-            state.reducerMap,
+            _.values(state.meta.children),
             items.map(item => createSelector(
               itemResolver(item),
               ...dependencies,
               selector)),
-            'cache.args.1'
+            'reducer.cache.args.1'
           ))))
 }
