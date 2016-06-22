@@ -19,6 +19,11 @@ var defaultGetter = exports.defaultGetter = function defaultGetter(state, key) {
   return state[key];
 };
 var defaultSetter = exports.defaultSetter = function defaultSetter(state, key, value) {
+  if (state instanceof Array) {
+    state = state.slice();
+    state[key] = value;
+    return state;
+  }
   return _extends({}, state, _defineProperty({}, key, value));
 };
 

@@ -1,10 +1,17 @@
 import _ from 'lodash'
 
 export const defaultGetter = (state, key) => state[key]
-export const defaultSetter = (state, key, value) => ({
-  ...state,
-  [key]: value,
-})
+export const defaultSetter = (state, key, value) => {
+  if (state instanceof Array) {
+    state = state.slice()
+    state[key] = value
+    return state
+  }
+  return ({
+    ...state,
+    [key]: value,
+  })
+}
 
 export const addMetadata = (reducer, children = {}, options = {}) => {
   const {getter = defaultGetter, setter = defaultSetter} = options
