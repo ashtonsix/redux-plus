@@ -57,8 +57,6 @@ var topologicalSort = function topologicalSort(nodes) {
 };
 
 var enhanceReducer = exports.enhanceReducer = function enhanceReducer(reducer) {
-  var depth = arguments.length <= 1 || arguments[1] === undefined ? 0 : arguments[1];
-
   var selectors = [];
   if (reducer && reducer.meta) {
     reducer.meta.traverse(function (node, path) {
@@ -66,28 +64,12 @@ var enhanceReducer = exports.enhanceReducer = function enhanceReducer(reducer) {
     });
   }
   if (!selectors.length) return reducer;
-
-  // TODO: Support dynamic dependency paths
-  selectors = topologicalSort(selectors.map(function (selector) {
-    return _extends({}, selector, {
-      path: _lodash2.default.toPath(selector.path).join('.'),
-      dependencies: selector.dependencies.map(function (dependency) {
-        return _lodash2.default.toPath(dependency).join('.');
-      })
-    });
-  }));
+  selectors = topologicalSort(selectors);
 
   return function (state, action) {
-    return (0, _liftEffects.liftEffects)(selectors.reduce(function (newState, _ref2) {
-      var path = _ref2.path;
-      var _reducer = _ref2.reducer;
-
-      var result = _reducer((0, _getModel.getModel)(newState), path);
-      path = _lodash2.default.toPath(path).filter(function (v) {
-        return v;
-      }).join('.');
-      return _lodash2.default.set((0, _getModel.getModel)(newState), path, result);
-    }, depth ? state : reducer(state, action)));
+    return (0, _liftEffects.liftEffects)(selectors.reduce(function (newState, selector) {
+      return reducer.meta.set((0, _getModel.getModel)(newState), selector.path, selector.reducer((0, _getModel.getModel)(newState), selector.path));
+    }, reducer(state, action)));
   };
 };
 

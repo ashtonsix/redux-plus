@@ -1,22 +1,18 @@
 import _ from 'lodash'
 import {createEffect} from './createEffect'
-import {addMetadata} from './helpers/addMetadata'
+import {addMetadata, defaultGetter, defaultSetter} from './helpers/addMetadata'
 import {liftEffects} from './helpers/liftEffects'
 
-const defaultGetter = (state, key) => state[key]
-const defaultSetter = (state, key, value) => ({
-  ...state,
-  [key]: value,
-})
-
 export const combineReducers = (reducerMap, rootState = {}, options = {}) => {
+  const {getter = defaultGetter, setter = defaultSetter} = options
+
   const finalReducer = (state = rootState, action) => {
     let hasChanged = false
 
     const [model, generators] =
     liftEffects(
       _.mapValues(reducerMap, (reducer, key) => {
-        const previousStateForKey = defaultGetter(state, key)
+        const previousStateForKey = getter(state, key)
         const nextStateForKey = reducer(previousStateForKey, action)
         if (previousStateForKey !== nextStateForKey) hasChanged = true
         return nextStateForKey
@@ -24,7 +20,7 @@ export const combineReducers = (reducerMap, rootState = {}, options = {}) => {
     )
 
     const result = hasChanged ?
-      Object.keys(model).reduce((_model, key) => defaultSetter(_model, key, model[key]), rootState) :
+      Object.keys(model).reduce((_model, key) => setter(_model, key, model[key]), rootState) :
       state
 
     return generators.length ?

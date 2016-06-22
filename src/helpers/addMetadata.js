@@ -1,7 +1,7 @@
 import _ from 'lodash'
 
-const defaultGetter = (state, key) => state[key]
-const defaultSetter = (state, key, value) => ({
+export const defaultGetter = (state, key) => state[key]
+export const defaultSetter = (state, key, value) => ({
   ...state,
   [key]: value,
 })
@@ -12,18 +12,18 @@ export const addMetadata = (reducer, children = {}, options = {}) => {
   reducer.meta = {
     reducer,
     get(state, key) {
-      key = _.toPath(key)
+      key = _.toPath(key).filter(v => v)
       const result = getter(state, key[0])
       if (key.length === 1) return result
-      return reducer.children[key].get(result, key.slice(1))
+      const childGetter = _.get(reducer, ['children', key, 'get'])
+      return (childGetter || reducer.meta.get)(result, key.slice(1))
     },
     set(state, key, value) {
-      key = _.toPath(key)
+      key = _.toPath(key).filter(v => v)
       if (key.length === 1) return setter(state, key[0], value)
-      return setter(
-        state, key[0],
-        reducer.children[key].set(
-          getter(state, key[0]), key.slice(1), value))
+      const childSetter = _.get(reducer, ['children', key, 'set'])
+      const result = (childSetter || reducer.meta.set)(getter(state, key[0]), key.slice(1), value)
+      return setter(state, key[0], result)
     },
     traverse(visitor, path = []) {
       if (!reducer) return

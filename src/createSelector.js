@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import {getModel} from './helpers/getModel'
 import {addMetadata} from './helpers/addMetadata'
 
@@ -26,14 +25,10 @@ export const createSelector = (...args) => {
   const memoizedFormula = defaultMemoize(formula)
 
   const reducer = state => state
-  const selector = (globalState, selectorPath) => {
-    const localState = _.get(globalState, selectorPath)
-    const formulaArgs = dependencies.map(path => {
-      if (typeof path === 'function') path = path(localState, globalState)
-      return _.get(globalState, path)
-    })
-    return memoizedFormula(localState, ...formulaArgs)
-  }
+  const selector = (globalState, selectorPath) =>
+    memoizedFormula(
+      reducer.meta.get(globalState, selectorPath),
+      ...dependencies.map(path => reducer.meta.get(globalState, path)))
 
   addMetadata(reducer, {'': formula})
   reducer.meta.selector = {dependencies, reducer: selector}

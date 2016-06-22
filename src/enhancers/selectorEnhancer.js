@@ -26,7 +26,7 @@ const topologicalSort = nodes => {
     .map(({__status, ...node}) => node) // eslint-disable-line no-unused-vars
 }
 
-export const enhanceReducer = (reducer, depth = 0) => {
+export const enhanceReducer = (reducer) => {
   let selectors = []
   if (reducer && reducer.meta) {
     reducer.meta.traverse((node, path) => {
@@ -34,26 +34,18 @@ export const enhanceReducer = (reducer, depth = 0) => {
     })
   }
   if (!selectors.length) return reducer
-
-  // TODO: Support dynamic dependency paths
-  selectors = topologicalSort(
-    selectors.map(selector => ({
-      ...selector,
-      path: _.toPath(selector.path).join('.'),
-      dependencies: selector.dependencies.map(dependency =>
-        _.toPath(dependency).join('.')),
-    }))
-  )
+  selectors = topologicalSort(selectors)
 
   return (state, action) =>
     liftEffects(
       selectors.reduce(
-        (newState, {path, reducer: _reducer}) => {
-          const result = _reducer(getModel(newState), path)
-          path = _.toPath(path).filter(v => v).join('.')
-          return _.set(getModel(newState), path, result)
-        },
-        depth ? state : reducer(state, action)
+        (newState, selector) =>
+          reducer.meta.set(
+            getModel(newState),
+            selector.path,
+            selector.reducer(getModel(newState), selector.path)
+        ),
+        reducer(state, action)
       )
     )
 }
