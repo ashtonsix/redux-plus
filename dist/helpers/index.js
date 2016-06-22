@@ -4,6 +4,15 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _addMetadata = require('./addMetadata');
+
+Object.defineProperty(exports, 'addMetadata', {
+  enumerable: true,
+  get: function get() {
+    return _addMetadata.addMetadata;
+  }
+});
+
 var _createArraySelector = require('./createArraySelector');
 
 Object.defineProperty(exports, 'createArraySelector', {
@@ -37,5 +46,14 @@ Object.defineProperty(exports, 'liftEffects', {
   enumerable: true,
   get: function get() {
     return _liftEffects.liftEffects;
+  }
+});
+
+var _updateWith = require('./updateWith');
+
+Object.defineProperty(exports, 'updateWith', {
+  enumerable: true,
+  get: function get() {
+    return _updateWith.updateWith;
   }
 });
