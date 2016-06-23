@@ -2,7 +2,7 @@
 // They are coupled very tightly so implemented together.
 
 import _ from 'lodash'
-import {getModel} from '../helpers/getModel'
+import {getModel} from '../getModel'
 import {liftEffects} from '../helpers/liftEffects'
 import {addMetadata, replaceNode} from '../helpers/addMetadata'
 import {reduceInteruptable} from '../helpers/reduceInteruptable'

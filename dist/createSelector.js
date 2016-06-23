@@ -3,46 +3,22 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createSelector = exports.defaultMemoize = undefined;
-
-var _getModel = require('./helpers/getModel');
+exports.createSelector = undefined;
 
 var _addMetadata = require('./helpers/addMetadata');
 
+var _memoize = require('./helpers/memoize');
+
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
-// TODO: make cache length configurable & accessible
-var defaultMemoize = exports.defaultMemoize = function defaultMemoize(func) {
-  var cache = {
-    args: undefined,
-    result: undefined
-  };
-
-  return function () {
-    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-
-    if (!cache.args || args.some(function (v, i) {
-      return cache.args[i] !== v;
-    })) {
-      cache.args = args;
-      var result = func.apply(undefined, args);
-      cache.result = (0, _getModel.getModel)(cache);
-      return result;
-    }
-    return cache.result;
-  };
-};
-
 var createSelector = exports.createSelector = function createSelector() {
-  for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-    args[_key2] = arguments[_key2];
+  for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
   }
 
   var dependencies = args.slice(0, -1);
   var formula = args[args.length - 1];
-  var memoizedFormula = defaultMemoize(formula);
+  var memoizedFormula = (0, _memoize.defaultMemoize)(formula);
 
   var reducer = function reducer(state) {
     return state;

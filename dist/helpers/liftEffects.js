@@ -11,9 +11,9 @@ var _lodash2 = _interopRequireDefault(_lodash);
 
 var _index = require('../index');
 
-var _getModel = require('./getModel');
+var _getModel = require('../getModel');
 
-var _getGenerators = require('./getGenerators');
+var _getGenerators = require('../getGenerators');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 

@@ -1,5 +1,5 @@
-import {getModel} from '../helpers/getModel'
-import {getGenerators} from '../helpers/getGenerators'
+import {getModel} from '../getModel'
+import {getGenerators} from '../getGenerators'
 
 export const effectEnhancer = (next) => (reducer, initialState, enhancer) => {
   let currentGenerators = []

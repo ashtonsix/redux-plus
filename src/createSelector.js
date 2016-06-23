@@ -1,23 +1,5 @@
-import {getModel} from './helpers/getModel'
 import {addMetadata} from './helpers/addMetadata'
-
-// TODO: make cache length configurable & accessible
-export const defaultMemoize = func => {
-  const cache = {
-    args: undefined,
-    result: undefined,
-  }
-
-  return (...args) => {
-    if (!cache.args || args.some((v, i) => cache.args[i] !== v)) {
-      cache.args = args
-      const result = func(...args)
-      cache.result = getModel(cache)
-      return result
-    }
-    return cache.result
-  }
-}
+import {defaultMemoize} from './helpers/memoize'
 
 export const createSelector = (...args) => {
   const dependencies = args.slice(0, -1)

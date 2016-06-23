@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import {createEffect} from '../index'
-import {getModel} from './getModel'
-import {getGenerators} from './getGenerators'
+import {getModel} from '../getModel'
+import {getGenerators} from '../getGenerators'
 
 export const liftEffects = object =>
   createEffect(

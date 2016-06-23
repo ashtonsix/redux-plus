@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.promise = undefined;
 
-var _getModel = require('../helpers/getModel');
+var _getModel = require('../getModel');
 
 var _index = require('../index');
 

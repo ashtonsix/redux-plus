@@ -4,7 +4,7 @@
  * promise((state, {payload}) => xr.post('/api/endpoint', payload))
  */
 
-import {getModel} from '../helpers/getModel'
+import {getModel} from '../getModel'
 import {createEffect} from '../index'
 
 export const promise = (promiseGenerator, reducer = getModel) => (state, action) => {

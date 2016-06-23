@@ -9,9 +9,13 @@ var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _index = require('../index');
+var _createDynamicReducer = require('./createDynamicReducer');
 
-var _updateWith = require('./updateWith');
+var _createSelector = require('./createSelector');
+
+var _combineReducers = require('./combineReducers');
+
+var _updateWith = require('./helpers/updateWith');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -61,11 +65,11 @@ var createArraySelector = exports.createArraySelector = function createArraySele
     dependencies = [];
   }
 
-  (0, _index.createDynamicReducer)((0, _index.createSelector)(arrayPointer, function () {
-    var state = arguments.length <= 0 || arguments[0] === undefined ? (0, _index.combineReducers)([], []) : arguments[0];
+  (0, _createDynamicReducer.createDynamicReducer)((0, _createSelector.createSelector)(arrayPointer, function () {
+    var state = arguments.length <= 0 || arguments[0] === undefined ? (0, _combineReducers.combineReducers)([], []) : arguments[0];
     var items = arguments[1];
-    return (0, _index.combineReducers)((0, _updateWith.updateWith)(_lodash2.default.values(state.meta.children), items.map(function (item) {
-      return _index.createSelector.apply(undefined, [itemResolver(item)].concat(_toConsumableArray(dependencies), [selector]));
+    return (0, _combineReducers.combineReducers)((0, _updateWith.updateWith)(_lodash2.default.values(state.meta.children), items.map(function (item) {
+      return _createSelector.createSelector.apply(undefined, [itemResolver(item)].concat(_toConsumableArray(dependencies), [selector]));
     }), 'reducer.cache.args.1'));
   }));
 };

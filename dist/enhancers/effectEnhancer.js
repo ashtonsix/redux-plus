@@ -5,9 +5,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.effectEnhancer = undefined;
 
-var _getModel = require('../helpers/getModel');
+var _getModel = require('../getModel');
 
-var _getGenerators = require('../helpers/getGenerators');
+var _getGenerators = require('../getGenerators');
 
 var effectEnhancer = exports.effectEnhancer = function effectEnhancer(next) {
   return function (reducer, initialState, enhancer) {

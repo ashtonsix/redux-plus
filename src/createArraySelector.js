@@ -39,8 +39,10 @@ createDynamicReducer(
  */
 
 import _ from 'lodash'
-import {createDynamicReducer, createSelector, combineReducers} from '../index'
-import {updateWith} from './updateWith'
+import {createDynamicReducer} from './createDynamicReducer'
+import {createSelector} from './createSelector'
+import {combineReducers} from './combineReducers'
+import {updateWith} from './helpers/updateWith'
 
 export const createArraySelector = (arrayPointer, itemResolver, dependencies, selector) => {
   if (typeof dependencies === 'function') {

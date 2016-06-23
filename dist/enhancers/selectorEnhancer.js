@@ -12,7 +12,7 @@ var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
-var _getModel = require('../helpers/getModel');
+var _getModel = require('../getModel');
 
 var _liftEffects = require('../helpers/liftEffects');
 

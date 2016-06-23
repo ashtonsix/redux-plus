@@ -20,7 +20,7 @@ var _xr = require('xr');
 
 var _xr2 = _interopRequireDefault(_xr);
 
-var _getModel = require('../helpers/getModel');
+var _getModel = require('../getModel');
 
 var _index = require('../index');
 

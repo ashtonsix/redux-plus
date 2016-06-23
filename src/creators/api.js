@@ -10,7 +10,7 @@
  */
 
 import xr from 'xr'
-import {getModel} from '../helpers/getModel'
+import {getModel} from '../getModel'
 import {createEffect} from '../index'
 
 const generateRequest = (config) =>
