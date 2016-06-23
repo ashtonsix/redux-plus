@@ -2,12 +2,11 @@
 /* eslint func-names:0, prefer-arrow-callback:0 */
 
 import expect from 'expect'
-import {createReducer, createSelector, combineReducers} from '../src/index'
+import {createStore, createReducer, createSelector, createDynamicReducer, combineReducers} from '../src/index'
 
-const createDynamicReducer = () => {}
 const updateWith = (originalArr, newArr, equivalenceCheck) => {}
 
-describe.skip('createDynamicReducer', function () {
+describe('createDynamicReducer', function () {
   describe('dynamicSelector', function () {
     let reducer
     let store
@@ -26,10 +25,10 @@ describe.skip('createDynamicReducer', function () {
             (state, todos) => createSelector(
               `todos.${todos.length - 1}`,
               (state, todo) => todo
-            )
-          )
-        )
+            )))
       })
+
+      store = createStore(reducer)
     })
 
     it('should initialize with correct state', function () {
@@ -44,7 +43,7 @@ describe.skip('createDynamicReducer', function () {
     })
   })
 
-  describe('dynamicArray', function () {
+  describe.skip('dynamicArray', function () {
     let reducer
     let store
 

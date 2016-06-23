@@ -10,7 +10,7 @@ redux-plus makes four non-breaking changes to redux:
 
 **effectEnhancer**: Running side-effects inside the reducer is bad because it makes your state hard to predict & test. With redux-plus you can return effects from the reducer which run in a different context. Effects can optionally return actions that are dispatched to the store.
 
-**selectorEnhancer**: Selectors are like formulas in a spreadsheet. They compute derived data and only update when the data they depend on does. Selectors can reference other selectors and their formulas (functions) can contain reducers, effects & other selectors.
+**selectorEnhancer**: Selectors are like formulas in a spreadsheet. They compute derived data and only update when the data they depend on does.
 
 **dynamicReducerEnhancer**: Some (mostly performance-related) problems are impossible to solve statically. redux-plus allows you to generate reducers on the fly. *This feature is very powerful and should be used with caution and you probably won't need it.*
 
@@ -47,29 +47,42 @@ setTimeout(() =>
   5000)
 ```
 
-#### API
+### API
+#### `createStore(reducer, [initialState], [storeEnhancer])`
 
-createReducer / combineReducer: catch-all middleware as plain function
+#### `plus`
 
-#### Migration
-For most applications `redux-plus` should be a drop-in replacement. It works fine with store enhancers like `redux-devtools`
+#### `createReducer(reducerMap)`
 
-#### Reducer Creators
+#### `combineReducers(reducerMap)`
 
-#### Computed Data
+#### `createEffect(reducer, ...generators)`
 
+#### `createSelector(...dependencies, reducer)`
 
-### Testing
+#### `createArraySelector(arrayPointer, itemResolver, [dependencies], reducer, [comparator])`
 
-### Alternatives
-MobX
+#### `createDynamicReducer(reducer)`
 
-* Inflexible architecture (MobX really excels here)
-* Referential integrity not guaranteed
+#### `applyMiddleware(middleware)`
+
+#### `compose(...storeEnhancers)`
+
+#### `getModel(effect)` / `getGenerators(effect)`
 
 ### Thanks
-Others did the real legwork. This library is merely a thin shell over some great technology including:
+Others did the real legwork. This library was inspired by:
 
-* redux-loop
-* reselect
-* and of course.. redux
+* [redux-loop](https://github.com/raisemarketplace/redux-loop) for side-effects in the reducer
+* [reselect](https://github.com/reactjs/reselect) for the ideal memoizer
+* [MobX](https://github.com/mobxjs/mobx) for the selector graph (great alternative that removes architectural constraints)
+* and of course.. [redux](https://github.com/reactjs/redux)
+
+### Todo
+* EffectError: path in message
+* customizable memoize
+* typings
+* dynamicSelectors: Syntax sugar
+* Docs: Like... everything
+  * Recpies: middleware, createArraySelector, Immutable, reducer creators
+  * Internals

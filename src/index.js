@@ -1,6 +1,7 @@
 export {storeEnhancer as plus} from './storeEnhancer'
 export {createStore} from './createStore'
 export {createReducer} from './createReducer'
+export {createDynamicReducer} from './createDynamicReducer'
 export {createEffect} from './createEffect'
 export {createSelector} from './createSelector'
 export {combineReducers} from './combineReducers'

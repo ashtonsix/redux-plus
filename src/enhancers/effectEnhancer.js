@@ -15,7 +15,13 @@ export const effectEnhancer = (next) => (reducer, initialState, enhancer) => {
 
   const runEffect = generators =>
     Promise
-      .all(generators.map(g => Promise.resolve(typeof g === 'function' ? g() : g)))
+      .all(generators.map(g =>
+        new Promise(resolve => resolve(typeof g === 'function' ? g() : g))
+          .catch(e => {
+            // TODO: include node path that returned generator
+            console.error('error while running generator')
+            throw e
+          })))
       .then(actions => actions.forEach(a => a != null && store.dispatch(a)))
 
   const _dispatch = store.dispatch

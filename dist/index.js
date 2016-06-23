@@ -31,6 +31,15 @@ Object.defineProperty(exports, 'createReducer', {
   }
 });
 
+var _createDynamicReducer = require('./createDynamicReducer');
+
+Object.defineProperty(exports, 'createDynamicReducer', {
+  enumerable: true,
+  get: function get() {
+    return _createDynamicReducer.createDynamicReducer;
+  }
+});
+
 var _createEffect = require('./createEffect');
 
 Object.defineProperty(exports, 'createEffect', {

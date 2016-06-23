@@ -105,4 +105,5 @@ describe('createSelector', function () {
   })
 
   // TODO: Add test to confirm memoize works (selectors only called when underlying data updates)
+  // TODO: Add test to confirm AcyclicError are thrown & have correct messages
 })

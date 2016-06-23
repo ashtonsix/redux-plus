@@ -28,7 +28,13 @@ var effectEnhancer = exports.effectEnhancer = function effectEnhancer(next) {
 
     var runEffect = function runEffect(generators) {
       return Promise.all(generators.map(function (g) {
-        return Promise.resolve(typeof g === 'function' ? g() : g);
+        return new Promise(function (resolve) {
+          return resolve(typeof g === 'function' ? g() : g);
+        }).catch(function (e) {
+          // TODO: include node path that returned generator
+          console.error('error while running generator');
+          throw e;
+        });
       })).then(function (actions) {
         return actions.forEach(function (a) {
           return a != null && store.dispatch(a);
