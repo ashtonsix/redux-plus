@@ -1,7 +1,6 @@
 // Psyche! selectorEnhancer is also the dynamicReducerEnhancer.
 // They are coupled very tightly so implemented together.
 
-import _ from 'lodash'
 import {getModel} from '../getModel'
 import {liftEffects} from '../helpers/liftEffects'
 import {addMetadata, replaceNode} from '../helpers/addMetadata'
@@ -21,6 +20,7 @@ export const enhanceReducer = (reducer, depth = 0) => {
   const nodes = dynamicReducers.concat(selectors)
   if (!nodes.length) return reducer
 
+  // TODO: research/testing needed to ensure selectors reliably bubble effects
   return (state, action) => {
     let result = reduceInteruptable(
       nodes,
@@ -33,9 +33,8 @@ export const enhanceReducer = (reducer, depth = 0) => {
           node.reducer(reducer.meta.get(getModel(newState), node.path), action)
 
         if (node.isDynamic) {
-          let newReducer = {meta: _.cloneDeep(reducer.meta)}
           _result.meta.isGenerated = true
-          newReducer = replaceNode(reducer, node.path, _result)
+          const newReducer = replaceNode(reducer, node.path, _result)
           interupt(enhanceReducer(newReducer, depth + 1)(newState, action))
         }
 

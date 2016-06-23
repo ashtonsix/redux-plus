@@ -2,5 +2,5 @@ export {defaultGetter, defaultSetter, addMetadata, replaceNode} from './addMetad
 export {liftEffects} from './liftEffects'
 export {reduceInteruptable} from './reduceInteruptable'
 export {topologicalSort} from './topologicalSort'
-export {updateWith} from './updateWith'
+export {transferTo} from './transferTo'
 export {defaultMemoize} from './memoize'

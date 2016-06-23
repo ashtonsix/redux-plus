@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-export const updateWith = (orignalArray, updatedArray, comparator) => {
+export const transferTo = (orignalArray, updatedArray, comparator) => {
   comparator = typeof comparator === 'function' ? comparator : v => _.get(v, comparator)
 
   const result = updatedArray.slice()

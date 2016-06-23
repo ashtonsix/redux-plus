@@ -20,7 +20,7 @@ createDynamicReducer(
     'todos',
     (state = combineReducers([], []), todos) =>
       combineReducers(
-        updateWith(
+        transferTo(
           state.meta.children,
           todos.map(({id}) => createSelector(
             `todos.${id}`,
@@ -42,7 +42,7 @@ import _ from 'lodash'
 import {createDynamicReducer} from './createDynamicReducer'
 import {createSelector} from './createSelector'
 import {combineReducers} from './combineReducers'
-import {updateWith} from './helpers/updateWith'
+import {transferTo} from './helpers/transferTo'
 
 export const createArraySelector = (arrayPointer, itemResolver, dependencies, selector) => {
   if (typeof dependencies === 'function') {
@@ -55,7 +55,7 @@ export const createArraySelector = (arrayPointer, itemResolver, dependencies, se
       arrayPointer,
       (state = combineReducers([], []), items) =>
         combineReducers(
-          updateWith(
+          transferTo(
             _.values(state.meta.children),
             items.map(item => createSelector(
               itemResolver(item),

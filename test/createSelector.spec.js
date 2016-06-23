@@ -106,6 +106,38 @@ describe('createSelector', function () {
     })
   })
 
+  describe('dynamicSelector', function () {
+    let reducer
+    let store
+    beforeEach(function () {
+      reducer = combineReducers({
+        todos: createReducer({
+          ADD_TODO: (state, {payload}) => state.concat(payload),
+          UPDATE_LAST_TODO: (state, {payload}) => {
+            state[state.length - 1] = payload
+            return state
+          },
+        }, ['Kill her']),
+        lastTodo: createSelector(
+          ['todos', (state, todos) => `todos.${todos.length - 1}`],
+          (state, todo) => todo),
+      })
+
+      store = createStore(reducer)
+    })
+
+    it('should initialize with correct state', function () {
+      expect(store.getState().lastTodo).toBe('Kill her')
+    })
+
+    it('should update state when actions are dispatched', function () {
+      store.dispatch('ADD_TODO', 'Hide the evidence')
+      expect(store.getState().lastTodo).toBe('Hide the evidence')
+      store.dispatch('UPDATE_LAST_TODO', 'Put her in the trunk')
+      expect(store.getState().lastTodo).toBe('Put her in the trunk')
+    })
+  })
+
   // TODO: Add test to confirm memoize works (selectors only called when underlying data updates)
   // TODO: Add test to confirm AcyclicError are thrown & have correct messages
 })

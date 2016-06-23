@@ -7,7 +7,7 @@ const {
 } = require(`../${process.env.NODE_ENV === 'production' ? 'dist' : 'src'}/index`)
 
 const {
-  updateWith
+  transferTo
 } = require(`../${process.env.NODE_ENV === 'production' ? 'dist' : 'src'}/helpers`)
 
 describe('createDynamicReducer', function () {
@@ -73,7 +73,7 @@ describe('createDynamicReducer', function () {
             'todos.result',
             (state = combineReducers([], []), todos) =>
               combineReducers(
-                updateWith(
+                transferTo(
                   state.meta.children,
                   todos.map(todoId => createSelector(
                     `todos.entities.${id}`,
