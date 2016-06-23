@@ -6,7 +6,7 @@ createReducer({
 })
  */
 
-import {createEffect} from '../index'
+import {createEffect} from '../createEffect'
 
 export const wait = (delay, func) => (state, action) =>
   createEffect(

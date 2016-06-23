@@ -2,9 +2,13 @@
 /* eslint func-names:0, prefer-arrow-callback:0 */
 
 import expect from 'expect'
-import {createStore, createReducer, createSelector, createDynamicReducer, combineReducers} from '../src/index'
+const {
+  createStore, createReducer, createSelector, createDynamicReducer, combineReducers
+} = require(`../${process.env.NODE_ENV === 'production' ? 'dist' : 'src'}/index`)
 
-const updateWith = (originalArr, newArr, equivalenceCheck) => {}
+const {
+  updateWith
+} = require(`../${process.env.NODE_ENV === 'production' ? 'dist' : 'src'}/helpers`)
 
 describe('createDynamicReducer', function () {
   describe('dynamicSelector', function () {

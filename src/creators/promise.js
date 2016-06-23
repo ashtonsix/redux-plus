@@ -5,7 +5,7 @@
  */
 
 import {getModel} from '../getModel'
-import {createEffect} from '../index'
+import {createEffect} from '../createEffect'
 
 export const promise = (promiseGenerator, reducer = getModel) => (state, action) => {
   const generator = () =>

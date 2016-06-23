@@ -11,7 +11,7 @@
 
 import xr from 'xr'
 import {getModel} from '../getModel'
-import {createEffect} from '../index'
+import {createEffect} from '../createEffect'
 
 const generateRequest = (config) =>
   typeof config === 'function' ? config :

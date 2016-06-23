@@ -1,7 +1,9 @@
 /* eslint func-names:0, prefer-arrow-callback:0 */
 
 import expect from 'expect'
-import {createStore, createSelector, createReducer, createEffect, combineReducers} from '../src/index'
+const {
+  createStore, createSelector, createReducer, createEffect, combineReducers,
+} = require(`../${process.env.NODE_ENV === 'production' ? 'dist' : 'src'}/index`)
 
 describe('createSelector', function () {
   const counterHandlers = {

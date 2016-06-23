@@ -2,7 +2,9 @@
 
 import expect from 'expect'
 import Immutable from 'immutable'
-import {createStore, createEffect, createReducer, combineReducers} from '../src/index'
+const {
+  createStore, createEffect, createReducer, combineReducers,
+} = require(`../${process.env.NODE_ENV === 'production' ? 'dist' : 'src'}/index`)
 
 describe('combineReducers', function () {
   describe('normalStore', function () {

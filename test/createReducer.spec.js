@@ -1,7 +1,7 @@
 /* eslint func-names:0, prefer-arrow-callback:0 */
 
 import expect from 'expect'
-import {createReducer} from '../src/index'
+const {createReducer} = require(`../${process.env.NODE_ENV === 'production' ? 'dist' : 'src'}/index`)
 
 describe('createReducer', function () {
   let handlers

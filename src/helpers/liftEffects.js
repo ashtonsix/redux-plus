@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import {createEffect} from '../index'
+import {createEffect} from '../createEffect'
 import {getModel} from '../getModel'
 import {getGenerators} from '../getGenerators'
 
