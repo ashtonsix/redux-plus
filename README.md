@@ -48,9 +48,31 @@ setTimeout(() =>
 ```
 
 ### API
-##### `createStore(reducer, [initialState], [storeEnhancer])`
+##### `createStore(reducer, [initialState], [storeEnhancer] = plus)`
+Drop-in replacement for `redux.createStore` storeEnhancer. `plus` by default.
+
+```js
+import {createStore, plus, compose} from 'redux-plus'
+
+const store = createStore(reducer) // use it like this
+const store = createStore(
+  reducer,
+  compose(plus, window.devToolsExtension ? window.devToolsExtension() : f => f)
+) // works with other store enhancers, apply plus first
+```
 
 ##### `plus`
+The composite store-enhancer, you can import individual enhancers from `redux-plus/enhancers`
+
+```js
+import {dispatchEnhancer, selectorEnhancer, effectEnhancer} from 'redux-plus/enhancers'
+
+export const plus = compose(
+  dispatchEnhancer,
+  selectorEnhancer, // doubles up as dynamicReducerEnhancer
+  effectEnhancer,
+)
+```
 
 ##### `createReducer(reducerMap)`
 
@@ -60,13 +82,15 @@ setTimeout(() =>
 
 ##### `createSelector(...dependencies, reducer)`
 
-##### `createArraySelector(arrayPointer, itemResolver, [dependencies], reducer, [comparator])`
+##### `createArraySelector(arrayPointer, itemResolver, [dependencies], reducer)`
 
 ##### `createDynamicReducer(reducer)`
 
 ##### `applyMiddleware(middleware)`
+Identical to `redux.applyMiddleware`
 
 ##### `compose(...storeEnhancers)`
+Identical to `redux.compose`
 
 ##### `getModel(effect)` / `getGenerators(effect)`
 

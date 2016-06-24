@@ -16,6 +16,8 @@ export const createDynamicReducer = child => {
   if (!child.meta) addMetadata(child)
   const func = _.get(child, 'meta.selector.reducer', child)
 
+  // DynamicReducers have their own cache. Technically this means the reducer mutates itself when called.
+  // One possible side-effect of this is losing referential integrity after replacing store reducer.
   let previousState
   const newFunc = (state, action) => {
     const result = child.meta.selector ?
