@@ -1,40 +1,46 @@
+import _ from 'lodash'
 import {addMetadata} from './helpers/addMetadata'
 
 // TODO: should throw error if dynamicReducer does not return reducer
 // TODO: returned reducer should have meta.isGenerated = true
-// const getPath = (meta, path = '') => {
-//   if (!meta.parent) return path
-//   return getPath(meta.parent, `${meta.name}.${path}`)
-// }
-//
-// function DynamicReducerError(message) {
-//   this.name = 'DynamicReducerError'
-//   this.message = message
-//   this.stack = (new Error()).stack
-// }
-//
-// const typeCheckDynamic = (f, path) => {
-//   const meta = f.meta
-//   f = (...args) => {
-//     const result = f(...args)
-//     if (typeof result !== 'function') {
-//       throw new DynamicReducerError(`${path} should return a reducer`)
-//     }
-//     if (!result.meta) addMetadata(result)
-//     result.meta.isGenerated = true
-//     return result
-//   }
-//   if (meta) f.meta = meta
-//   return f
-// }
+const getPath = (meta, path = '') => {
+  if (!meta.parent) return path
+  return getPath(meta.parent, `${meta.name}.${path}`)
+}
 
-export const createDynamicReducer = f => {
-  if (!f.meta) addMetadata(f)
+function DynamicReducerError(message) {
+  this.name = 'DynamicReducerError'
+  this.message = message
+  this.stack = (new Error()).stack
+}
 
-  // const path = getPath(f.meta)
-  // if (f.meta.selector) f.meta.selector.reducer = typeCheckDynamic(f.meta.selector.reducer, path)
-  // else f = typeCheckDynamic(f, path)
+export const createDynamicReducer = child => {
+  if (!child.meta) addMetadata(child)
+  const func = _.get(child, 'meta.selector.reducer', child)
 
-  f.meta.isDynamic = true
-  return f
+  let previousState
+  const newFunc = (state, action) => {
+    const result = child.meta.selector ?
+      func(state, action, previousState) :
+      func(previousState, action)
+    if (typeof result !== 'function') {
+      throw new DynamicReducerError(`${getPath(child.meta)} should return a reducer`)
+    }
+    if (!result.meta) addMetadata(result)
+    result.meta.isGenerated = true
+    previousState = result
+    return result
+  }
+
+  if (child.meta.selector) {
+    child.meta.selector.reducer = newFunc
+  } else {
+    const meta = child.meta
+    child = newFunc
+    child.meta = meta
+    child.meta.reducer = child
+  }
+
+  child.meta.isDynamic = true
+  return child
 }

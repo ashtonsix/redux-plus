@@ -106,12 +106,12 @@ describe('combineReducers', function () {
     })
 
     it('should initialize with immutable state', function () {
-      expect(Immutable.is(store.getState(), Immutable.Map({counter: 0}))).toExist()
+      expect(Immutable.is(store.getState(), Immutable.Map({counter: 0}))).toBe(true)
     })
 
     it('should update immutable state after running action', function () {
       store.dispatch('INCREMENT')
-      expect(Immutable.is(store.getState(), Immutable.Map({counter: 1}))).toExist()
+      expect(Immutable.is(store.getState(), Immutable.Map({counter: 1}))).toBe(true)
     })
   })
 })

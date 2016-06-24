@@ -8,16 +8,19 @@ const _functions = {}
 
 export const createSelector = (...args) => {
   const dependencies = args.slice(0, -1)
-  const formula = args[args.length - 1]
   if (dependencies.some(v => v instanceof Array)) {
     return _functions.createDynamicSelector(...args)
   }
 
-  const memoizedFormula = defaultMemoize(formula)
+  let formula = args[args.length - 1]
+  const meta = formula.meta
+  formula = defaultMemoize(formula, [true])
+  if (meta) formula.meta = meta
+
   const reducer = state => state
-  const selector = (globalState, selectorPath) =>
-    memoizedFormula(
-      reducer.meta.get(globalState, selectorPath),
+  const selector = (globalState, selectorPath, previousState) =>
+    formula(
+      previousState || reducer.meta.get(globalState, selectorPath),
       ...dependencies.map(path => reducer.meta.get(globalState, path)))
 
   addMetadata(reducer, {'': formula})

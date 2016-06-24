@@ -72,6 +72,12 @@ describe('createSelector', function () {
       store.dispatch('INCREMENT')
       expect(store.getState().counterHalved).toBe(1)
     })
+
+    it("should use cached state if the underlying data doesn't change", function () {
+      const counterDoubled = store.getState().counterDoubled
+      store.dispatch('SOME_RANDOM_ACTION')
+      expect(store.getState().counterDoubled).toBe(counterDoubled)
+    })
   })
 
   describe('computationsThatReturnEffects', function () {
@@ -138,6 +144,5 @@ describe('createSelector', function () {
     })
   })
 
-  // TODO: Add test to confirm memoize works (selectors only called when underlying data updates)
-  // TODO: Add test to confirm AcyclicError are thrown & have correct messages
+  // TODO: Add test to confirm AcyclicError is thrown correctly
 })

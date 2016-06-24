@@ -48,27 +48,35 @@ setTimeout(() =>
 ```
 
 ### API
-#### `createStore(reducer, [initialState], [storeEnhancer])`
+##### `createStore(reducer, [initialState], [storeEnhancer])`
 
-#### `plus`
+##### `plus`
 
-#### `createReducer(reducerMap)`
+##### `createReducer(reducerMap)`
 
-#### `combineReducers(reducerMap)`
+##### `combineReducers(reducerMap)`
 
-#### `createEffect(reducer, ...generators)`
+##### `createEffect(reducer, ...generators)`
 
-#### `createSelector(...dependencies, reducer)`
+##### `createSelector(...dependencies, reducer)`
 
-#### `createArraySelector(arrayPointer, itemResolver, [dependencies], reducer, [comparator])`
+##### `createArraySelector(arrayPointer, itemResolver, [dependencies], reducer, [comparator])`
 
-#### `createDynamicReducer(reducer)`
+##### `createDynamicReducer(reducer)`
 
-#### `applyMiddleware(middleware)`
+##### `applyMiddleware(middleware)`
 
-#### `compose(...storeEnhancers)`
+##### `compose(...storeEnhancers)`
 
-#### `getModel(effect)` / `getGenerators(effect)`
+##### `getModel(effect)` / `getGenerators(effect)`
+
+### Tell Me More
+* emulating middleware
+* reducer creators
+* efficient lists
+* using immutable.js
+* rendering in the reducer
+* reducer metadata
 
 ### Thanks
 Others did the real legwork. This library was inspired by:
@@ -82,7 +90,3 @@ Others did the real legwork. This library was inspired by:
 * EffectError: path in message
 * customizable memoize
 * typings
-* dynamicSelectors: Syntax sugar
-* Docs: Like... everything
-  * Recpies: middleware, createArraySelector, Immutable, reducer creators
-  * Internals
