@@ -1,6 +1,3 @@
-// Working with impure functions like these is anus, my apologies
-// It's because function de-referencing / cloning in JS
-
 import _ from 'lodash'
 
 export const defaultGetter = (state, key) => state[key]

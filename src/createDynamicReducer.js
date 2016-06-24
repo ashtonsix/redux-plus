@@ -1,8 +1,6 @@
 import _ from 'lodash'
 import {addMetadata} from './helpers/addMetadata'
 
-// TODO: should throw error if dynamicReducer does not return reducer
-// TODO: returned reducer should have meta.isGenerated = true
 const getPath = (meta, path = '') => {
   if (!meta.parent) return path
   return getPath(meta.parent, `${meta.name}.${path}`)

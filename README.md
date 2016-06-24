@@ -1,6 +1,6 @@
 redux-plus
 ==========
-> **WORK IN PROGRESS - DO NOT USE**
+> **ADVERTISING:** I'm actively looking for work, see [www.ashtonwar.com](http://ashtonwar.com/) for details.
 
 The core of Redux is simple. But it comes with a big ecosystem, middleware, action creators, selectors and other things attached that slow down development - a single change in specs shouldn't require changes in 5+ locations to implement. redux-plus makes developers more productive by finding one place for all state-related code: the reducer.
 
@@ -85,8 +85,3 @@ Others did the real legwork. This library was inspired by:
 * [reselect](https://github.com/reactjs/reselect) for the ideal memoizer
 * [MobX](https://github.com/mobxjs/mobx) for the selector graph (great alternative that removes architectural constraints)
 * and of course.. [redux](https://github.com/reactjs/redux)
-
-### Todo
-* EffectError: path in message
-* customizable memoize
-* typings
