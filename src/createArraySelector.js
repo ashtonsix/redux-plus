@@ -6,6 +6,7 @@ import {transferTo} from './helpers/transferTo'
 
 export const createArraySelector = (arrayPointer, itemResolver, dependencies, selector, rootState = []) => {
   if (typeof dependencies === 'function') {
+    rootState = selector || []
     selector = dependencies
     dependencies = []
   }

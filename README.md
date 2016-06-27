@@ -133,7 +133,7 @@ liftEffects(newState)
 //  isEffect: true]
 ```
 
-And adds structural metadata to the reducer so the store-enhancer can build dependency trees (see [reducer metadata](https://github.com/ashtonwar/redux-plus/blob/master/docs/Reducer_Metadata.md) for details)
+And adds structural metadata to the reducer so the store-enhancer can build dependency trees
 
 The `rootState` and `getter` / `setter` arguments help support a variety of reducer shapes like arrays
 
@@ -271,7 +271,7 @@ store.getState().lastTodo // 'Wash the laundry'
 
 > Using static dependencies is preferred due to performance penalties (the selector graph has to be rebuilt every time a dynamic dependency is evaluated)
 
-##### `createArraySelector(arrayPointer, itemResolver, [dependencies], reducer)`
+##### `createArraySelector(arrayPointer, itemResolver, [dependencies], reducer, [rootState])`
 See [effcient lists](https://github.com/ashtonwar/redux-plus/blob/master/docs/Effcient_Lists.md)
 
 ##### `createDynamicReducer(reducer)`
@@ -322,7 +322,6 @@ These helpers are useful for unit testing reducers. Effects bubble so your final
 * [emulating middleware](https://github.com/ashtonwar/redux-plus/blob/master/docs/Emulating_Middleware.md)
 * [effcient lists](https://github.com/ashtonwar/redux-plus/blob/master/docs/Effcient_Lists.md)
 * [rendering in the reducer](https://github.com/ashtonwar/redux-plus/blob/master/docs/Rendering_In_The_Reducer.md)
-* [reducer metadata](https://github.com/ashtonwar/redux-plus/blob/master/docs/Reducer_Metadata.md)
 
 ### Thanks
 Others did the real legwork. This library was inspired by:
