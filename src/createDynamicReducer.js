@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import {addMetadata} from './helpers/addMetadata'
+import {addMetadata} from './helpers/metadata'
 
 const getPath = (meta, path = '') => {
   if (!meta.parent) return path

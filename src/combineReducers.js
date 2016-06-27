@@ -1,10 +1,15 @@
 import _ from 'lodash'
 import {createEffect} from './createEffect'
-import {addMetadata, defaultGetter, defaultSetter} from './helpers/addMetadata'
+import {addMetadata} from './helpers/metadata'
+import {defaultGetter} from './helpers/defaultGetter'
+import {defaultSetter} from './helpers/defaultSetter'
 import {liftEffects} from './helpers/liftEffects'
 
 export const combineReducers = (reducerMap, rootState = {}, options = {}) => {
   const {getter = defaultGetter, setter = defaultSetter} = options
+  // TODO: remove this monkey-patch and create a better fix: reducerMap should always be an object
+  // the problem probably stems from createDynamicReducer inheriting getters/setters from reducer state
+  if (reducerMap && reducerMap['@@__IMMUTABLE_ITERABLE__@@']) reducerMap = reducerMap.toJS()
 
   const finalReducer = (state = rootState, action) => {
     let hasChanged = false

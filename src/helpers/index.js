@@ -1,4 +1,6 @@
-export {defaultGetter, defaultSetter, addMetadata, replaceNode} from './addMetadata'
+export {defaultGetter} from './defaultGetter'
+export {defaultSetter} from './defaultSetter'
+export {addMetadata, replaceNode} from './metadata'
 export {createTransformer} from './createTransformer'
 export {liftEffects} from './liftEffects'
 export {reduceInteruptable} from './reduceInteruptable'

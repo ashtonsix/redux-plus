@@ -1,17 +1,6 @@
 import _ from 'lodash'
-
-export const defaultGetter = (state, key) => state[key]
-export const defaultSetter = (state, key, value) => {
-  if (state instanceof Array) {
-    state = state.slice()
-    state[key] = value
-    return state
-  }
-  return ({
-    ...state,
-    [key]: value,
-  })
-}
+import {defaultGetter} from './defaultGetter'
+import {defaultSetter} from './defaultSetter'
 
 const get = (reducer, getter) => (state, key) => {
   key = _.toPath(key).filter(v => v)

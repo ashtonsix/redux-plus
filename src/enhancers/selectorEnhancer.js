@@ -1,9 +1,10 @@
 // Psyche! selectorEnhancer is also the dynamicReducerEnhancer.
 // They are coupled very tightly so implemented together.
 
+import _ from 'lodash'
 import {getModel} from '../getModel'
 import {liftEffects} from '../helpers/liftEffects'
-import {addMetadata, replaceNode} from '../helpers/addMetadata'
+import {addMetadata, replaceNode} from '../helpers/metadata'
 import {reduceInteruptable} from '../helpers/reduceInteruptable'
 import {topologicalSort} from '../helpers/topologicalSort'
 
@@ -49,7 +50,9 @@ export const enhanceReducer = (reducer, depth = 0) => {
     )
     if (!depth) {
       nodes.forEach(node => delete node.ignore)
-      result = liftEffects(result)
+      // ad-hoc support for computaions that return effects
+      // only works for single-nested reducers that return plain objects
+      if (_.isPlainObject(result)) result = liftEffects(result)
     }
     return result
   }

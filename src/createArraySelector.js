@@ -4,7 +4,7 @@ import {createSelector} from './createSelector'
 import {combineReducers} from './combineReducers'
 import {transferTo} from './helpers/transferTo'
 
-export const createArraySelector = (arrayPointer, itemResolver, dependencies, selector) => {
+export const createArraySelector = (arrayPointer, itemResolver, dependencies, selector, rootState = []) => {
   if (typeof dependencies === 'function') {
     selector = dependencies
     dependencies = []
@@ -22,5 +22,5 @@ export const createArraySelector = (arrayPointer, itemResolver, dependencies, se
               ...dependencies,
               selector)),
             i => _.get(i, 'meta.selector.dependencies').join(',')
-          ), [])))
+          ), rootState)))
 }

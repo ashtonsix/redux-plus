@@ -148,23 +148,18 @@ Or [Immutable.js](https://facebook.github.io/immutable-js/) maps
 
 ```js
 const reducer = combineReducers(
-  {todos, counter},
-  Immutable.Map(),
   {
-    getter: (child, key) => child.get(key)
-    setter: (child, key, value) => {
-      value = Immutable.Iterable.isIterable(value) ?
-        value : Immutable.fromJS(value)
-      return child.set(key, value)
-    }
-  }
+    todos: createReducer({
+      ADD_TODO: (state, {payload}) => state.push(payload)
+    }, Immutable.List()),
+    counter
+  },
+  Immutable.Map(),
 )
 
 reducer(undefined, {type: 'ADD_TODO', payload: 'Read the docs'}).toJS()
 // {todos: ['Read the docs'], counter: 0}
 ```
-
-If you use Immutable.js a lot you should write a helper that wraps `combineReducers` and passes in a default `rootState` & `getter` / `setter`
 
 ##### `createEffect(newState, ...generators)`
 The state returned by the reducer may contain descriptions of side-effects (generators), that the `effectEnhancer` knows how to interpret. Calling the reducer does not run effects

@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import {addMetadata} from './helpers/addMetadata'
+import {addMetadata} from './helpers/metadata'
 import {defaultMemoize} from './helpers/memoize'
 import {createDynamicReducer} from './createDynamicReducer'
 
