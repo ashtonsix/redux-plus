@@ -4,7 +4,7 @@ import expect from 'expect'
 import Immutable from 'immutable'
 const {
   createStore, createReducer, combineReducers, createArraySelector,
-} = require(`../${process.env.NODE_ENV === 'production' ? 'dist' : 'src'}/index`)
+} = require(`../${process.env.NODE_ENV === 'production' ? 'modules' : 'src'}/index`)
 
 describe('createArraySelector', function () {
   let reducer

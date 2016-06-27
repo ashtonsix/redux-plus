@@ -2,12 +2,12 @@
   "name": "redux-plus",
   "version": "0.3.1",
   "description": "",
-  "main": "dist/index.js",
+  "main": "modules/index.js",
   "scripts": {
-    "prebuild": "rimraf dist",
+    "prebuild": "rimraf modules",
     "build": "set NODE_ENV=production&& webpack",
     "postbuild": "git add . --all",
-    "pretest": "npm run build",
+    "pretest": "npm run lint && npm run build",
     "test": "set NODE_ENV=production&& mocha",
     "start": "mocha --watch --reporter min",
     "lint": "eslint src test"

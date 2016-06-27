@@ -3,7 +3,7 @@
 import expect from 'expect'
 const {
   createStore, createEffect, createReducer,
-} = require(`../${process.env.NODE_ENV === 'production' ? 'dist' : 'src'}/index`)
+} = require(`../${process.env.NODE_ENV === 'production' ? 'modules' : 'src'}/index`)
 
 describe('createEffect', function () {
   let spyTargets

@@ -63,10 +63,10 @@ const store = createStore(
 ```
 
 ##### `plus`
-The composite store-enhancer, you can import individual enhancers from `redux-plus/enhancers`
+The composite store-enhancer, you can import individual enhancers from `redux-plus/modules/enhancers`
 
 ```js
-import {dispatchEnhancer, selectorEnhancer, effectEnhancer} from 'redux-plus/enhancers'
+import {dispatchEnhancer, selectorEnhancer, effectEnhancer} from 'redux-plus/modules/enhancers'
 
 export const plus = compose(
   dispatchEnhancer,

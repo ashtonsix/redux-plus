@@ -3,7 +3,7 @@
 import expect from 'expect'
 const {
   createStore, createSelector, createReducer, createEffect, combineReducers,
-} = require(`../${process.env.NODE_ENV === 'production' ? 'dist' : 'src'}/index`)
+} = require(`../${process.env.NODE_ENV === 'production' ? 'modules' : 'src'}/index`)
 
 describe('createSelector', function () {
   const counterHandlers = {

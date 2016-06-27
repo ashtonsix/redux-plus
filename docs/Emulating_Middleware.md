@@ -73,10 +73,10 @@ const store = createStore(reducer)
 store.dispatch('LOGIN', {username: 'user', password: 'pass'})
 ```
 
-For your convenience you can import the `api`, `log` & `wait` reducer creators from `redux-plus/creators`
+For your convenience you can import the `api`, `log` & `wait` reducer creators from `redux-plus/modules/creators`
 
 ```js
-import {api, log, wait} from 'redux-plus/creators'
+import {api, log, wait} from 'redux-plus/modules/creators'
 ```
 
 ---
@@ -86,7 +86,7 @@ import {api, log, wait} from 'redux-plus/creators'
 You can hide your middleware from state with `combineReducers` and eschew `createReducer` to create reducers that respond to every action
 
 ```js
-import {defaultGetter, defaultSetter} from 'redux-plus/helpers'
+import {defaultGetter, defaultSetter} from 'redux-plus/modules/helpers'
 
 const ignoreKeys = (keys) => ({
   getter: (child, key) => keys.indexOf(key) === -1 && defaultGetter(child, key)
@@ -153,8 +153,8 @@ store.dispatch('(AUTH)GET_DATA', {id: 'xxx-xxx'})
 // {type: 'GET_DATA', payload: {id: 'xxx-xxx'}, meta: {authToken: 'xxx-xxx'}}
 ```
 
-You can import `createTransformer` from `redux-plus/helpers`
+You can import `createTransformer` from `redux-plus/modules/helpers`
 
 ```js
-import {createTransformer} from 'redux-plus/helpers'
+import {createTransformer} from 'redux-plus/modules/helpers'
 ```

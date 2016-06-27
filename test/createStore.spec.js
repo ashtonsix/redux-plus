@@ -1,7 +1,7 @@
 /* eslint func-names:0, prefer-arrow-callback:0 */
 
 import expect from 'expect'
-const {createStore} = require(`../${process.env.NODE_ENV === 'production' ? 'dist' : 'src'}/index`)
+const {createStore} = require(`../${process.env.NODE_ENV === 'production' ? 'modules' : 'src'}/index`)
 
 describe('createStore', function () {
   let spyTargets

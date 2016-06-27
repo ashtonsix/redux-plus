@@ -12,7 +12,7 @@ const config = {
   },
   output: {
     filename: '[name].js',
-    path: __dirname + '/dist', // eslint-disable-line prefer-template
+    path: __dirname + '/modules', // eslint-disable-line prefer-template
     library: 'redux-plus',
     libraryTarget: 'umd',
   },
