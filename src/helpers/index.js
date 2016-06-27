@@ -1,4 +1,5 @@
 export {defaultGetter, defaultSetter, addMetadata, replaceNode} from './addMetadata'
+export {createTransformer} from './createTransformer'
 export {liftEffects} from './liftEffects'
 export {reduceInteruptable} from './reduceInteruptable'
 export {topologicalSort} from './topologicalSort'

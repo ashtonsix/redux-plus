@@ -1,5 +1,6 @@
 redux-plus
 ==========
+
 > **ADVERTISING:** I'm actively looking for work, see [www.ashtonwar.com](http://ashtonwar.com/) for details.
 
 The core of Redux is simple. But it comes with a big ecosystem, middleware, action creators, selectors and other things attached that slow down development - a single change in specs shouldn't require changes in 5+ locations to implement. redux-plus makes developers more productive by finding one place for all state-related code: the reducer.
@@ -49,7 +50,8 @@ setTimeout(() =>
 
 ### API
 ##### `createStore(reducer, [initialState], [storeEnhancer] = plus)`
-Drop-in replacement for *redux.createStore*. Uses *plus* store-enhancer by default
+Drop-in replacement for `redux.createStore`. Uses `plus` store-enhancer by default
+
 ```js
 import {createStore, plus, compose} from 'redux-plus'
 
@@ -62,6 +64,7 @@ const store = createStore(
 
 ##### `plus`
 The composite store-enhancer, you can import individual enhancers from `redux-plus/enhancers`
+
 ```js
 import {dispatchEnhancer, selectorEnhancer, effectEnhancer} from 'redux-plus/enhancers'
 
@@ -73,9 +76,10 @@ export const plus = compose(
 ```
 
 ##### `createReducer(reducerMap, [initialState])`
-> *createReducer* is convenience-only, write reducers as plain functions if you like
+> `createReducer` is convenience-only, write reducers as plain functions if you like
 
 Maps action types to reducers
+
 ```js
 const counter = createReducer({
   INCREMENT: (state, {payload = 1}) => state + payload,
@@ -89,6 +93,7 @@ counter(13, {type: 'SOME_OTHER_ACTION'}) // 13
 ```
 
 A switch statement could do the same thing
+
 ```js
 const counter = (state = 0, {type, payload}) {
   switch (type) {
@@ -100,7 +105,8 @@ const counter = (state = 0, {type, payload}) {
 ```
 
 ##### `combineReducers(reducerMap, rootState, {getter, setter})`
-Use *combineReducers* to split up your state
+Use `combineReducers` to split up your state
+
 ```js
 const reducer = combineReducers({
   todos: createReducer({
@@ -113,7 +119,8 @@ reducer(undefined, {type: 'ADD_TODO', payload: 'Read the docs'})
 // {todos: ['Read the docs'], counter: 0}
 ```
 
-You probably don't need to worry about this but *combineReducers* also lifts effects
+You probably don't need to worry about this but `combineReducers` also lifts effects
+
 ```js
 const newState = {
   todos: [[{id: 1, name: 'Read the docs'}], [() => getTodo(2)], isEffect: true],
@@ -128,7 +135,8 @@ liftEffects(newState)
 
 And adds structural metadata to the reducer so the store-enhancer can build dependency trees (see [reducer metadata](https://github.com/ashtonwar/redux-plus/blob/master/docs/Reducer_Metadata.md) for details)
 
-The *rootState* and *getter* / *setter* arguments help support a variety of reducer shapes like arrays
+The `rootState` and `getter` / `setter` arguments help support a variety of reducer shapes like arrays
+
 ```js
 const reducer = combineReducers([todos, counter], [])
 
@@ -137,6 +145,7 @@ reducer(undefined, {type: 'ADD_TODO', payload: 'Read the docs'})
 ```
 
 Or [Immutable.js](https://facebook.github.io/immutable-js/) maps
+
 ```js
 const reducer = combineReducers(
   {todos, counter},
@@ -155,10 +164,11 @@ reducer(undefined, {type: 'ADD_TODO', payload: 'Read the docs'}).toJS()
 // {todos: ['Read the docs'], counter: 0}
 ```
 
-If you use Immutable.js a lot you should write a helper that wraps *combineReducers* and passes in a default *rootState* & *getter* / *setter*
+If you use Immutable.js a lot you should write a helper that wraps `combineReducers` and passes in a default `rootState` & `getter` / `setter`
 
 ##### `createEffect(newState, ...generators)`
-The state returned by the reducer may contain descriptions of side-effects (generators), that the *effectEnhancer* knows how to interpret. Calling the reducer does not run effects
+The state returned by the reducer may contain descriptions of side-effects (generators), that the `effectEnhancer` knows how to interpret. Calling the reducer does not run effects
+
 ```js
 const clock = createReducer({
   TICK: state => createEffect(!state, 'TICK')
@@ -170,6 +180,7 @@ store.subscribe(::console.log) // true, false, true... until universe heat death
 ```
 
 An effect may contain multiple generators. Generators may be constants, functions or functions that return promises. They can optionally return actions that will be dispatched to the store
+
 ```js
 const reducer = createReducer({
   ACTION_1: () => createEffect(
@@ -194,7 +205,8 @@ Effects are useful for things like making HTTP requests and interacting with bro
 ##### `createSelector(...dependencies, reducer)`
 Selectors are like formulas in a spreadsheet. They compute derived data and only update when the data they depend on does
 
-Each dependency is a path relevant to the state's root. These will be resolved and passed to the reducer when evaluated by the *selectorEnhancer*
+Each dependency is a path relevant to the state's root. These will be resolved and passed to the reducer when evaluated by the `selectorEnhancer`
+
 ```js
 const reducer = combineReducers({
   todos: createReducer({
@@ -221,6 +233,7 @@ store.getState().searchResults // ['Wash the laundry', 'Hang the laundry']
 ```
 
 Selectors can depend on other selectors & be chained
+
 ```js
 const reducer = combineReducers({
   counter,
@@ -242,6 +255,7 @@ store.getState() // {counter: 1, counterDoubled: 2, counterHalved: 0.5}
 > Selectors cannot have cyclic dependencies, example: A cannot depend on B, if B relies on A
 
 Selector dependencies can be selectors themselves
+
 ```js
 const reducer = combineReducers({
   todos: createReducer({
@@ -268,9 +282,10 @@ See [effcient lists](https://github.com/ashtonwar/redux-plus/blob/master/docs/Ef
 ##### `createDynamicReducer(reducer)`
 > This feature is very powerful and should be used with caution and you probably won't need it.
 
-Dynamic reducers return reducers which are evaluated in-place by the *dynamicStoreEnhancer*. They are required for problems that cannot be solved statically
+Dynamic reducers return reducers which are evaluated in-place by the `dynamicStoreEnhancer`. They are required for problems that cannot be solved statically
 
 Dynamic selector dependencies are a piece of syntactic sugar that relies on dynamic reducers
+
 ```js
 createSelector(
   ['todos', (state, todos) => `todos.${todos.length - 1}`],
@@ -287,7 +302,7 @@ createDynamicReducer(
     )))
 ```
 
-*createArraySelector* also relies on dynamic reducers. The reducer creates a selector for each item in the array and combines them into a reducer that only updates the individual items that change.
+`createArraySelector` also relies on dynamic reducers. The reducer creates a selector for each item in the array and combines them into a reducer that only updates the individual items that change.
 
 > Dynamic reducers are a potential performance bottleneck, every time one is evaluated the selector graph has to be rebuilt: an O(# selectors * # dynamic reducers * # actions dispatched) problem
 
@@ -303,14 +318,13 @@ Same as *redux.compose*
 These helpers are useful for unit testing reducers. Effects bubble so your final state is likely to be an effect itself
 
 ```js
-[state, generators, isEffect: true]
+[state, [generator1, generator2], isEffect: true]
 ```
 
-*getModel* & *getGenerators* return the respective elements and default to `state` or `[]` if the state is not an effect.
+`getModel` & `getGenerators` return the respective elements and default to `state` or `[]` if the state is not an effect.
 
 ### Tell Me More
 * [emulating middleware](https://github.com/ashtonwar/redux-plus/blob/master/docs/Emulating_Middleware.md)
-* [reducer creators](https://github.com/ashtonwar/redux-plus/blob/master/docs/Reducer_Creators.md)
 * [effcient lists](https://github.com/ashtonwar/redux-plus/blob/master/docs/Effcient_Lists.md)
 * [rendering in the reducer](https://github.com/ashtonwar/redux-plus/blob/master/docs/Rendering_In_The_Reducer.md)
 * [reducer metadata](https://github.com/ashtonwar/redux-plus/blob/master/docs/Reducer_Metadata.md)

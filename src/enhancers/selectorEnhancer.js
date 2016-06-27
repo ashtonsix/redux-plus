@@ -35,7 +35,7 @@ export const enhanceReducer = (reducer, depth = 0) => {
         if (node.isDynamic) {
           _result.meta.isGenerated = true
           const newReducer = replaceNode(reducer, node.path, _result)
-          interupt(enhanceReducer(newReducer, depth + 1)(newState, action))
+          return interupt(enhanceReducer(newReducer, depth + 1)(newState, action))
         }
 
         node.ignore = true

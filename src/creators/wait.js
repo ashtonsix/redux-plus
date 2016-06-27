@@ -11,6 +11,7 @@ import {createEffect} from '../createEffect'
 export const wait = (delay, func) => (state, action) =>
   createEffect(
     state,
-    () => new Promise(resolve => setTimeout(() =>
-      resolve(func(state, action)),
-      delay)))
+    () =>
+      new Promise(resolve => setTimeout(() =>
+        resolve(func(state, action)),
+        delay)))

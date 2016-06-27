@@ -1,34 +1,18 @@
-/**
- * An easy way to create api request in reducers
- * Superset of promise
- *
- * api('POST', '/api/endpoint')
- * api('POST', '/api/endpoint', {headers: {Authentication: 'password'}})
- * api({method: 'POST', url: '/api/endpoint', headers: {Authentication: 'password'}})
- * api((state, {payload}) => xr.post('/api/endpoint', payload))
- * api('POST', '/api/endpoint', (state) => ({counter: state.counter + 1, ...state}))
- */
-
 import xr from 'xr'
-import {getModel} from '../getModel'
 import {createEffect} from '../createEffect'
 
-const generateRequest = (config) =>
-  typeof config === 'function' ? config :
-    (state, {payload}) =>
-      xr({[config.method === 'GET' ? 'params' : 'data']: payload, ...config})
+export const api = (method, url, config = {}, reducer = s => s) => (state, action) => {
+  config = typeof config === 'function' ? config(action) : config
 
-const _api = (requestConfig, reducer = getModel) => (state, action) => {
-  const generator = () =>
-    generateRequest(requestConfig)(state, action).then(
-      response => ({type: `${action.type}_SUCCESS`, payload: response.data, meta: {response}}),
-      error => ({type: `${action.type}_FAILURE`, payload: error}))
-  return createEffect(reducer(state, action), generator)
+  return createEffect(
+    reducer(state, action),
+    () =>
+      xr({
+        [config.method === 'GET' ? 'params' : 'data']: action.payload,
+        method, url, ...config})
+      .then(
+        response => ({
+          type: `${action.type}_SUCCESS`, payload: response.data,
+          meta: {response, originalAction: action}}),
+        error => ({type: `${action.type}_FAILURE`, payload: error})))
 }
-
-export const api = (...args) =>
-  typeof args[0] === 'string' && typeof args[1] === 'string' ?
-    typeof args[2] !== 'function' ?
-      _api({method: args[0], url: args[1], ...args[2]}, args[3]) :
-      _api({method: args[0], url: args[1]}, args[2]) :
-    _api(...args)
