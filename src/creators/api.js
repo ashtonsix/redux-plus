@@ -8,7 +8,7 @@ export const api = (method, url, config = {}, reducer = s => s) => (state, actio
     reducer(state, action),
     () =>
       xr({
-        [config.method === 'GET' ? 'params' : 'data']: action.payload,
+        [config.method === 'GET' ? 'params' : 'data']: action.payload || {},
         method, url, ...config})
       .then(
         response => ({
