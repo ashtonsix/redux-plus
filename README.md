@@ -23,13 +23,13 @@ import {
 
 const reducer = combineReducers({
   counter: createReducer({
-    INCREMENT: state => state + 1
+    INCREMENT: state => state + 1,
     INCREMENT_IN_5_SECONDS: state => createEffect(
       state,
       () => new Promise(resolve => setTimeout(() =>
         resolve('INCREMENT'),
         5000))
-    )
+    ),
   }, 0),
   counterDoubled: createSelector(
     'counter',
@@ -95,7 +95,7 @@ counter(13, {type: 'SOME_OTHER_ACTION'}) // 13
 A switch statement could do the same thing
 
 ```js
-const counter = (state = 0, {type, payload}) {
+const counter = (state = 0, {type, payload}) => {
   switch (type) {
     case 'INCREMENT': return state + payload
     case 'DECREMENT': return state - payload
@@ -110,7 +110,7 @@ Use `combineReducers` to split up your state
 ```js
 const reducer = combineReducers({
   todos: createReducer({
-    (state, {payload}) => state.concat(payload)
+    ADD_TODO: (state, {payload}) => state.concat(payload)
   }),
   counter,
 })
@@ -150,7 +150,7 @@ Or [Immutable.js](https://facebook.github.io/immutable-js/) maps
 const reducer = combineReducers(
   {
     todos: createReducer({
-      ADD_TODO: (state, {payload}) => state.push(payload)
+      ADD_TODO: (state, {payload}) => state.push(payload),
     }, Immutable.List()),
     counter
   },
@@ -166,7 +166,7 @@ The state returned by the reducer may contain descriptions of side-effects (gene
 
 ```js
 const clock = createReducer({
-  TICK: state => createEffect(!state, 'TICK')
+  TICK: state => createEffect(!state, 'TICK'),
 }, false)
 
 const store = createStore(clock)
@@ -183,8 +183,8 @@ const reducer = createReducer({
     'ACTION_2', // these
     () => 'ACTION_3', // are all
     () => Promise.resolve('ACTION_4'), // equivalent
-    () => {} // this won't dispatch anything
-  )
+    () => {}, // this won't dispatch anything
+  ),
 })
 const logger = applyMiddleware(store => next => action => (console.log(action), next(action)))
 const store = createStore(reducer, compose(plus, logger))
