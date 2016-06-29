@@ -45,7 +45,7 @@ store.dispatch('INCREMENT_IN_5_SECONDS')
 store.getState() // {counter: 1, counterDoubled: 2}
 setTimeout(() =>
   store.getState(), // {counter: 2, counterDoubled: 4}
-  5000)
+  5001)
 ```
 
 ### API

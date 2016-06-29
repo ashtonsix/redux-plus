@@ -3,6 +3,8 @@
 
 import _ from 'lodash'
 import {getModel} from '../getModel'
+import {getGenerators} from '../getGenerators'
+import {createEffect} from '../createEffect'
 import {liftEffects} from '../helpers/liftEffects'
 import {addMetadata, replaceNode} from '../helpers/metadata'
 import {reduceInteruptable} from '../helpers/reduceInteruptable'
@@ -40,10 +42,13 @@ export const enhanceReducer = (reducer, depth = 0) => {
         }
 
         node.ignore = true
-        return reducer.meta.set(
-          getModel(newState),
-          node.path,
-          _result
+        return createEffect(
+          reducer.meta.set(
+            getModel(newState),
+            node.path,
+            _result
+          ),
+          ...getGenerators(newState)
         )
       },
       depth ? state : reducer(state, action)
