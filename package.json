@@ -1,6 +1,6 @@
 {
   "name": "redux-plus",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "description": "",
   "main": "modules/index.js",
   "scripts": {
