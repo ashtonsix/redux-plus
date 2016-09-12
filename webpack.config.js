@@ -33,14 +33,6 @@ const config = {
 
 if (env === 'production') {
   config.plugins.push(
-    new webpack.optimize.UglifyJsPlugin({
-      compressor: {
-        pure_getters: true,
-        unsafe: true,
-        unsafe_comps: true,
-        warnings: false,
-      },
-    }),
     new LodashModuleReplacementPlugin({
       collections: true,
       paths: true,
