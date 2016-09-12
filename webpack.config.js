@@ -4,6 +4,7 @@ const LodashModuleReplacementPlugin = require('lodash-webpack-plugin')
 const env = process.env.NODE_ENV
 
 const config = {
+  devtool: 'source-map',
   entry: {
     index: './src/index',
     creators: './src/creators',
