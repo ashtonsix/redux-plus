@@ -1,8 +1,6 @@
 redux-plus
 ==========
 
-> **ADVERTISING:** I'm actively looking for work, see [www.ashtonwar.com](http://ashtonwar.com/) for details.
-
 The core of Redux is simple. But it comes with a big ecosystem, middleware, action creators, selectors and other things attached that slow down development - a single change in specs shouldn't require changes in 5+ locations to implement. redux-plus makes developers more productive by finding one place for all state-related code: the reducer.
 
 redux-plus makes four non-breaking changes to redux:
